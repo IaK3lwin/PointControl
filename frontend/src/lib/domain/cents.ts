@@ -7,7 +7,7 @@ export type Cent = {
 
 }
 
-export function cent() : Cent{
+export function centFactory() : Cent{
 
   let value : number = 0
 

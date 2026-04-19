@@ -38,5 +38,15 @@ export class Manager {
   }
 
 
+  public getWorkDay(): WorkDay {
+    if (this.wordDay) {
+      return this.wordDay
+
+    } else {
+      throw new Error('work day do not exist')
+    }
+  }
+
+
   
 }
