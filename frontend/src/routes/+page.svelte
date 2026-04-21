@@ -1,25 +1,30 @@
 <script lang="ts">
-  import type { WorkDay } from "$lib/domain/workDay";
-    import { onMount } from "svelte";
+  import { onMount } from "svelte"
+  import type { WorkDay } from "$lib/domain/workDay"
 
-    let raw : string | null 
-    let currentDate: string | null  = $state(null)
-    let workDays: Map<String, WorkDay> = $state(new Map()) 
+  let raw: string | null = $state(null)
+  let currentDate : string | null = $state(null)
+  let workDays: Map<string, WorkDay> = $state(new Map())
+  let loading: boolean = $state(false)
 
   onMount(() => {
+  
     raw = localStorage.getItem('workdays');
     currentDate = new Date().toLocaleDateString('pt-BR')
-
+  
     workDays = raw
-	    ? new Map<string, WorkDay>(JSON.parse(raw))
-	    : new Map()
-
-    console.log(workDays, currentDate)
+      ? new Map<string, WorkDay>(JSON.parse(raw))
+      : new Map()
+  
+  
+    if (workDays.size <= 0 || !workDays.has(currentDate)) {
+      loading = true
+    } 
   })
   
 </script>
 
-{#if workDays.size <= 0 && !workDays.has(currentDate ?? '')}
+{#if loading}
 
   <section id="workdayConfirm">
 

@@ -2,6 +2,7 @@ import ServiceInflatable from "$lib/components/ServiceInflatable.svelte"
 import {  centFactory, type Cent } from "./cents"
 import type { ServiceBase, ServiceEnflatable, ServiceFood } from "./services"
 import { TypeService } from "./typeServices"
+import {v4 as uuid} from "uuid"
 
 export enum AccountStatus  {
   OPEN,
@@ -11,6 +12,7 @@ export enum AccountStatus  {
 export type Account = {
   id: string
   status : AccountStatus
+  nameTag: string
 
   createdAt : Date
 
@@ -26,17 +28,17 @@ export type Account = {
 }
 
 
-export function accountFactory() : Account {
+export function accountFactory(name : string) : Account {
 
   
   function addService(service : ServiceEnflatable | ServiceFood) {
     
     if (service.type) {
-      accout.services.set(service.type, service)
+      account.services.set(service.type, service)
       return
     }
 
-    accout.services.set(service.type,service)
+    account.services.set(service.type,service)
     
   }
   
@@ -47,8 +49,9 @@ export function accountFactory() : Account {
     
   }
   
-  const accout: Account = {
-    id : "",
+  const account: Account = {
+    id : uuid(),
+    nameTag : name,
     status : AccountStatus.OPEN,
     total : centFactory(),
     createdAt : new Date(),
@@ -59,6 +62,6 @@ export function accountFactory() : Account {
     
   }
 
-  return accout
+  return account
 
 }

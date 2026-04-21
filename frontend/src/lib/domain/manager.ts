@@ -1,5 +1,6 @@
 import type { WorkDay, StatusWorkDay } from "./workDay";
 import type { Account } from "./accoun"
+import { v4 as uuid} from "uuid"
 
 export class Manager {
 
@@ -12,7 +13,7 @@ export class Manager {
 
     if (!this.wordDay) {
       this.wordDay = {
-        id : crypto.randomUUID().toString(),
+        id : uuid(),
         data : dateCurrent.toLocaleDateString("pt-BR"),
         status : 'undefined',
         startedAt : "",
