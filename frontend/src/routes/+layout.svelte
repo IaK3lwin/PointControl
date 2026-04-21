@@ -13,6 +13,7 @@
 </svelte:head>
 
 <main>
+
 	<Header />
 	{@render children()}
 
@@ -22,6 +23,6 @@
 	main {
 		display: flex;
 		flex-flow:column nowrap;
-		height: 100%;
+		height: 100vh;
 	}
 </style>

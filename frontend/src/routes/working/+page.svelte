@@ -3,26 +3,52 @@
   import type { WorkDay } from "$lib/domain/workDay"
   import type {Account} from "$lib/domain/accoun"
   import AccountElement from "$lib/components/AccountElement.svelte"
-  import {CopyPlus} from "@lucide/svelte"
   import WarnComponent from "$lib/components/WarnComponent.svelte"
+  import ButtonOptions from "$lib/components/ButtonOptions.svelte"
+  import {type OptionsButton} from "$lib/components/ButtonOptions.svelte"
+  import CreateAccountForm from "./components/CreateAccountForm.svelte"
+  import { accountsWritable } from "$lib/stores/listAccounts.svelte"
+  import {get as getWritable} from "svelte/store"
 
   const manager: Manager = Manager.get()
   const workday: WorkDay = manager.getWorkDay()
+  accountsWritable.set(workday.accountsInDay)
 
+  let showCreateAccountPopup: boolean = $state(false)
 
+  function ShowFormCreateAccount(event: Event) {
+    event.preventDefault()
+    showCreateAccountPopup = true
+  }
 
-  let accounts : Map<number, Account> = $state(workday.accountsInDay)
+  const options: OptionsButton[] = [
+    {
+      name : "Criar Conta",
+      callback : ShowFormCreateAccount,
+      
+    }]
+
+  function updateAccountsstate(newAccount: Account) {
+   
+    $accountsWritable = $accountsWritable.set($accountsWritable.size + 1,newAccount)
+    
+  }
 
 </script>
 
+
+{#if showCreateAccountPopup}
+  <CreateAccountForm closed={() => {showCreateAccountPopup = false}} update={updateAccountsstate}/>
+{/if}
+
 <section id="container">
+
 
   <h1>contas</h1>
 
   <section id="wrapperAcounts">
 
-    {#each accounts as [id, account]}
-
+    {#each $accountsWritable as [id, account]}
       <AccountElement account={account} idLabel={id}/>
 
       {:else}
@@ -35,11 +61,7 @@
 
   </section>
 
-  <span>
-    <button>
-      <CopyPlus size={30}/>
-    </button>
-  </span>
+  <ButtonOptions {options} />
 
 </section>
 
@@ -60,41 +82,6 @@
     text-align: center;
   }
 
-  span {
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-    height: 90%;
-    
-    display: flex;
-    flex-flow: column;
-    justify-content: flex-end;
-    align-items: flex-end;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  span button {
-    all: unset;
-    width: 3rem;
-    height: 3rem;
-
-    pointer-events: all;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(173, 163, 163, 0.226);
-    box-shadow: 4px 3px 10px rgba(107, 70, 70, 0.336);
-    border-radius: 50%;
-  }
-
-  span button:hover {
-
-    cursor: pointer;
-
-  }
-
   section#warnContainer {
     width: 100%;
     height: 100%;
@@ -106,6 +93,5 @@
   #wrapperAcounts {
     width: 100%;
     height: 90%;
-    background-color: red;
   }
 </style>

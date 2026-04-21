@@ -8,7 +8,7 @@
 
  <header>
   n°: {idLabel}
-  Valor total: {account.total}
+  Valor total: {account.total.toReal(account.total.value)}
  </header> 
 
 </article>
