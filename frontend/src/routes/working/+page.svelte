@@ -50,7 +50,6 @@
     
   }
 
-
 </script>
 
 
@@ -60,7 +59,7 @@
 
 <section id="container">
   
-  <h1 style:--random-color={randomColor()}>contas</h1>
+  <h1 style:--random-color={randomColor('1')}>contas</h1>
 
   <div id="containerAccount">
 
@@ -69,7 +68,7 @@
       {#each $accountsWritable as account, index (index)}
 
         {#if account.status == AccountStatus.OPEN}
-          <AccountElement account={account} idLabel={index}/>
+          <AccountElement account={account} idLabel={index} updateAccountsInWorkday={updateAccountsstate}/>
         {/if}
         
       {/each}

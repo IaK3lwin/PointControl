@@ -9,20 +9,20 @@ export enum AccountStatus  {
   CLOSED = "CLOSED"
 }
 
+export type TypePayment = 'monay' | 'credit' | 'pix' | null
+
 export type Account = {
+
   id: string
   status : AccountStatus
   nameTag: string
-
   createdAt : string
-
+  typePayment: TypePayment
   total : Cent
-
-  services: Map< TypeService, ServiceEnflatable | ServiceFood>
+  services: (ServiceEnflatable | ServiceFood)[] 
 
   addService : (service : ServiceEnflatable | ServiceFood) => void
   removeService : (id : string) => void
-
   closedService : ()  => void
 
 }
@@ -33,13 +33,7 @@ export function accountFactory(name : string) : Account {
   
   function addService(service : ServiceEnflatable | ServiceFood) {
     
-    if (service.type) {
-      account.services.set(service.type, service)
-      return
-    }
-
-    account.services.set(service.type,service)
-    
+    account.services.push(service)    
   }
   
   function removeService() {
@@ -55,8 +49,9 @@ export function accountFactory(name : string) : Account {
     nameTag : name,
     status : AccountStatus.OPEN,
     total : centFactory(),
+    typePayment : null,
     createdAt : new Date().toLocaleDateString('pt-BR'),
-    services : new Map(),
+    services : [],
     addService,
     removeService,
     closedService

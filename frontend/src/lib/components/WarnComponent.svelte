@@ -32,6 +32,7 @@
 
   section h1 {
     font-size: 1.2rem;
+    text-align: center;
   }
 
   section img {

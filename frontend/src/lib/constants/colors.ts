@@ -1,19 +1,23 @@
-const Colors = [
-  // Tríade pastel: rosa, azul e verde (tons próximos e suaves)
-  "#F6D6E6",
-  "#F1C9DD",
-  "#EABFD5",
-  "#E2D3F5",
-  "#D4C7F0",
-  "#C7BBEA",
-  "#D4F1E4",
-  "#C7EBD9",
-  "#B9E4CF",
-  "#EDE7F8",
-  "#E7F6EF",
-  "#F8EEF4"
+const Colors: string[] = [
+	"#EAF4FF",
+	"#D6E9FF",
+	"#BDD9FF",
+	"#A3C9FF",
+	"#89B8F5"
 ];
 
-export default function randomColor(): string {
-    return Colors[Math.floor(Math.random() * Colors.length - 1)]
+const colorsSecundary: string[] = [
+  "#DBEAFE",
+	"#FEE2E2",
+	"#DCFCE7",
+	"#FEF3C7",
+	"#EDE9FE"
+]
+
+
+export default function randomColor(type: '1' | '2'): string {
+  if (type == '1') {
+    return Colors[Math.floor(Math.random() * Colors.length )]
+  }
+  return colorsSecundary[Math.floor(Math.random() * colorsSecundary.length - 1)]
 }

@@ -4,18 +4,12 @@
 
 
 	let {
-		name,
-    id,
-    isFinish,
-    priceCent,
-    timeDuration,
-    type,
-    
-	}: ServiceEnflatable = $props();
+		service
+	}: { service : ServiceEnflatable } = $props();
 
   
   let startedAt = $state<number | null>();
-	let finished = $derived(isFinish);
+	let finished = $derived(service.isFinish);
 	let now = $state(Date.now());
 	let frameId: number | null = null;
 	
@@ -51,11 +45,11 @@
 	});
 
 	const remainingSeconds = $derived.by(() => {
-		return Math.max(timeDuration - elapsedSeconds, 0);
+		return Math.max(service.timeDuration - elapsedSeconds, 0);
 	});
 
 	const progress = $derived.by(() => {
-		return ((timeDuration - remainingSeconds) / timeDuration) * 100;
+		return ((service.timeDuration - remainingSeconds) / service.timeDuration) * 100;
 	});
 
 	const timeLabel = $derived.by(() => {
@@ -74,7 +68,7 @@
 	<div class="top">
 		<div>
 			<h2>{name}</h2>
-			<p>{priceCent.toReal(priceCent.value)}</p>
+			<p>{service.priceCent.toReal(service.priceCent.value)}</p>
 		</div>
 
 		<span class:running={startedAt && !finished} class:done={finished}>
