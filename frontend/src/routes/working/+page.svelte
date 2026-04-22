@@ -9,13 +9,14 @@
   import CreateAccountForm from "./components/CreateAccountForm.svelte"
   import { accountsWritable } from "$lib/stores/listAccounts.svelte"
   import randomColor from "$lib/constants/colors"
-    import { onMount } from "svelte";
-    import { browser } from "$app/environment";
+  import { onMount } from "svelte"
+  import { browser } from "$app/environment"
 
   const manager: Manager = Manager.get()
-  const workday: WorkDay | null = manager.getWorkDay()
+  let workday: WorkDay | null  = null
 
-  if (workday) {
+  if (browser ) {
+    workday = manager.getWorkDay()
     accountsWritable.set(workday.accountsInDay)
   }
 

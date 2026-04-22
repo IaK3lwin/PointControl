@@ -7,9 +7,13 @@ export type Cent = {
 
 }
 
-export function centFactory() : Cent{
+export function centFactory(valueInReal ?: string) : Cent{
 
   let value : number = 0
+  
+  if (valueInReal) {
+    value = toCent(valueInReal)
+  }
 
   function toCent(input: string): number {
     const cleaned = input
@@ -31,11 +35,11 @@ export function centFactory() : Cent{
 
   }
 
-  function toReal(cents: number) : string {
+  function toReal(cents ?: number) : string {
     return new Intl.NumberFormat("pt-BR", {
       style : 'currency',
       currency : 'BRL'
-    }).format(cents / 100)
+    }).format(cents ?? value / 100)
   } 
 
 

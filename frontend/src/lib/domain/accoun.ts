@@ -14,7 +14,7 @@ export type Account = {
   status : AccountStatus
   nameTag: string
 
-  createdAt : Date
+  createdAt : string
 
   total : Cent
 
@@ -43,10 +43,11 @@ export function accountFactory(name : string) : Account {
   }
   
   function removeService() {
+    //TODO: do implementation
   }
   
   function closedService() {
-    
+    //TODO: do a implementation
   }
   
   const account: Account = {
@@ -54,7 +55,7 @@ export function accountFactory(name : string) : Account {
     nameTag : name,
     status : AccountStatus.OPEN,
     total : centFactory(),
-    createdAt : new Date(),
+    createdAt : new Date().toLocaleDateString('pt-BR'),
     services : new Map(),
     addService,
     removeService,

@@ -7,7 +7,18 @@
 
 <article style:--random-color={randomColor()}>
 
-  <section id="containerService">
+  <aside>
+
+    <div>
+      número: {idLabel}
+    </div>
+
+    <div>
+      valor total: {account.total.toReal(account.total.value)}
+    </div>
+  </aside>
+
+  <section id="containerService" style:--random-color={randomColor()}>
     <span id="wrapperService">
       
     </span>
@@ -43,7 +54,7 @@
 
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: .1fr 1fr auto;
   }
 
   section#containerService {
@@ -57,10 +68,23 @@
 
     height: 95%;
 
+    backdrop-filter:  blur(5px) ;
+    opacity: .5;
     background-color: var(--random-color);
     
-    
   }
+
+  #wrapperService {
+    width: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-flow: column nowrap;
+
+    backdrop-filter: brightness(30%);
+
+  }
+
+  
 
   header {
     display: flex;
