@@ -12,7 +12,7 @@ export type WorkDay = {
   pait: boolean
   paitAt: string
 
-  accountsInDay : Map<number, Account>
+  accountsInDay : Account[]
 
 
 }

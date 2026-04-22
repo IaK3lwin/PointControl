@@ -1,9 +1,23 @@
 @charset "utf-8";
 
+@import url('https://fonts.googleapis.com/css2?family=Sekuya&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Sekuya&display=swap');
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Arimo';
 }
 
+h1 {
+  font-family: 'Sekuya';
+}
 
+.square {
+  background-color: var(--random-color);
+  padding: .5rem;
+  border: 1px solid black;
+}

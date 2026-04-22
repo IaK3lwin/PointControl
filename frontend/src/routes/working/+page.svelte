@@ -1,18 +1,24 @@
 <script lang="ts">
   import { Manager } from "$lib/domain/manager"
   import type { WorkDay } from "$lib/domain/workDay"
-  import type {Account} from "$lib/domain/accoun"
+  import {AccountStatus, type Account} from "$lib/domain/accoun"
   import AccountElement from "$lib/components/AccountElement.svelte"
   import WarnComponent from "$lib/components/WarnComponent.svelte"
   import ButtonOptions from "$lib/components/ButtonOptions.svelte"
   import {type OptionsButton} from "$lib/components/ButtonOptions.svelte"
   import CreateAccountForm from "./components/CreateAccountForm.svelte"
   import { accountsWritable } from "$lib/stores/listAccounts.svelte"
-  import {get as getWritable} from "svelte/store"
+  import randomColor from "$lib/constants/colors"
+    import { onMount } from "svelte";
+    import { browser } from "$app/environment";
 
   const manager: Manager = Manager.get()
-  const workday: WorkDay = manager.getWorkDay()
-  accountsWritable.set(workday.accountsInDay)
+  const workday: WorkDay | null = manager.getWorkDay()
+
+  if (workday) {
+    accountsWritable.set(workday.accountsInDay)
+  }
+
 
   let showCreateAccountPopup: boolean = $state(false)
 
@@ -29,10 +35,20 @@
     }]
 
   function updateAccountsstate(newAccount: Account) {
+    if (workday == null) {
+      return
+    }
    
-    $accountsWritable = $accountsWritable.set($accountsWritable.size + 1,newAccount)
+    accountsWritable.update((accounts) => {
+      accounts.push(newAccount)
+      return accounts
+    })
+    workday.accountsInDay = $accountsWritable
+    
+    manager.saveWorkdays(workday)
     
   }
+
 
 </script>
 
@@ -42,24 +58,24 @@
 {/if}
 
 <section id="container">
+  
+  <h1 style:--random-color={randomColor()}>contas</h1>
 
+  <div id="containerAccount">
 
-  <h1>contas</h1>
+    <span id="accountWrapper">
 
-  <section id="wrapperAcounts">
+      {#each $accountsWritable as account, index (index)}
 
-    {#each $accountsWritable as [id, account]}
-      <AccountElement account={account} idLabel={id}/>
+        {#if account.status == AccountStatus.OPEN}
+          <AccountElement account={account} idLabel={index}/>
+        {/if}
+        
+      {/each}
 
-      {:else}
-        <section id="warnContainer">
-          <WarnComponent title="Opss.." message="Não há contas registrada no momento"/>
+    </span>
 
-        </section>
-      
-    {/each}
-
-  </section>
+  </div>
 
   <ButtonOptions {options} />
 
@@ -78,20 +94,34 @@
 
   }
 
-  #container h1 {
+  h1 {
     text-align: center;
   }
 
-  section#warnContainer {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  #wrapperAcounts {
+  #containerAccount {
     width: 100%;
     height: 90%;
+
+    padding: 0 .5rem 0 .5rem;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
   }
+
+  #accountWrapper {
+    min-width: 100%;
+    height: 100%;
+    overflow: scroll;
+
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+ 
 </style>

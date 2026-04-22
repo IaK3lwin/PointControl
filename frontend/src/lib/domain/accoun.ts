@@ -5,8 +5,8 @@ import { TypeService } from "./typeServices"
 import {v4 as uuid} from "uuid"
 
 export enum AccountStatus  {
-  OPEN,
-  CLOSED
+  OPEN = "OPEN",
+  CLOSED = "CLOSED"
 }
 
 export type Account = {

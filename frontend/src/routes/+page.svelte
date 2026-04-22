@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import type { WorkDay } from "$lib/domain/workDay"
+    import { workDayTodayWritable } from "$lib/stores/workday.svelte";
 
   let raw: string | null = $state(null)
   let currentDate : string | null = $state(null)
@@ -11,15 +12,30 @@
   
     raw = localStorage.getItem('workdays');
     currentDate = new Date().toLocaleDateString('pt-BR')
-  
+    console.log('raw: ', raw)
     workDays = raw
       ? new Map<string, WorkDay>(JSON.parse(raw))
       : new Map()
   
   
     if (workDays.size <= 0 || !workDays.has(currentDate)) {
+      console.log("sem dias de trabalhos para hoje")
+      console.log(workDays.get(currentDate))
       loading = true
+      return
     } 
+    
+    const possibleWorkday = workDays.get(currentDate)
+
+    if (possibleWorkday) {
+      console.log("dia de trabalho existe")
+      console.log(possibleWorkday)
+
+      $workDayTodayWritable =  possibleWorkday
+      loading = true
+    } else {
+      loading = false 
+    }
   })
   
 </script>

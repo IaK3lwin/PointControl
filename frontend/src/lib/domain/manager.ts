@@ -1,6 +1,7 @@
 import type { WorkDay, StatusWorkDay } from "./workDay";
 import type { Account } from "./accoun"
 import { v4 as uuid} from "uuid"
+import { browser } from "$app/environment";
 
 export class Manager {
 
@@ -9,22 +10,38 @@ export class Manager {
   private  static instanciate: Manager | null = null
 
   private constructor() {
-    const dateCurrent: Date = new Date()
+    if (!browser) {
+      return
+    }
 
-    if (!this.wordDay) {
+    const dateCurrent: string = new Date().toLocaleDateString('pt-BR')
+
+    let workday:  string | null = localStorage.getItem('workdays')
+    
+    if (!workday) {
       this.wordDay = {
         id : uuid(),
-        data : dateCurrent.toLocaleDateString("pt-BR"),
+        data : dateCurrent,
         status : 'undefined',
         startedAt : "",
         finishAt : "",
         pait : false,
         paitAt : "",
-        accountsInDay : new Map<number, Account>()
+        accountsInDay : []
       }
-
+      return
     }
+    
+    const workdays: Map<string, WorkDay> = new Map(JSON.parse(workday))
 
+    if (workdays.has(dateCurrent)) {
+
+      let workday = workdays.get(dateCurrent)
+
+      if (workday) {
+        this.wordDay = workday
+      }
+    }
   }
 
 
@@ -39,15 +56,43 @@ export class Manager {
   }
 
 
-  public getWorkDay(): WorkDay {
+  public getWorkDay(): WorkDay | null {
+
     if (this.wordDay) {
+
       return this.wordDay
 
-    } else {
-      throw new Error('work day do not exist')
-    }
+    } 
+    
+    return null
   }
 
 
+  public saveWorkdays(newWorkday: WorkDay): void{
+    if (!browser) {
+      return
+    }
+
+    const workDayMap: string | null = localStorage.getItem('workdays')
+    const date : string = new Date().toLocaleDateString("pt-BR")
+
+    if (!workDayMap) {
+      console.log("work day não existe")
+      const workdayTemp: Map<string, WorkDay> = new Map()
+
+      workdayTemp.set(date, newWorkday)
+
+      localStorage.setItem('workdays', JSON.stringify(Array.from(workdayTemp.entries())))
+
+      console.log(localStorage.getItem('workdays'))
+
+      return
+    }
+
+    let currentWorkday: Map<string, WorkDay> = new Map(JSON.parse(workDayMap))
+    currentWorkday.set(date, newWorkday)
+
+    localStorage.setItem('workdays', JSON.stringify(Array.from(currentWorkday.entries())))
+  }
   
 }
