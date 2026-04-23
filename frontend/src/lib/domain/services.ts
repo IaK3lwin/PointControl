@@ -133,7 +133,7 @@ export class ServiceEnflatable extends Service{
     service.type = data.type
     service.timeDuration = data.timeDuration
     service.isFinish = data.isFinish
-
+    console.log(`Service.toDomain() is finish! service with name ${service.getName()} : `, service)
     return service
   }
 }

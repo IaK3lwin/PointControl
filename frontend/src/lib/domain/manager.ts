@@ -1,14 +1,11 @@
 import { WorkDay, workDayFactory, type WorkDayData } from "./workDay";
-import { v4 as uuid} from "uuid"
 import { browser } from "$app/environment";
-import { accountFactory, type Account } from "./accoun";
-import { centFactory } from "./cents";
 
 export class Manager {
 
-  private wordDay: WorkDay | null = null
+  private workdayCurrent: WorkDay | null = null
 
-  private  static instanciate: Manager | null = null
+  private static instanciate: Manager | null = null
 
   private constructor() {
     if (!browser) {
@@ -17,37 +14,51 @@ export class Manager {
 
     const dateCurrent: string = new Date().toLocaleDateString('pt-BR')
 
-    let workdaysInLocalStorage:  string | null = localStorage.getItem('workdays')
-    
-    if (!workdaysInLocalStorage) {
-      this.wordDay = workDayFactory()
-      return
+    const workdaysMapData: Map<string, WorkDayData> = this.getWorkdayInLocalStorage()
+
+    if (workdaysMapData.size == 0) {
+      console.log("workdays is null")
+      this.workdayCurrent = workDayFactory()
     }
-    
-    const workdays: Map<string, WorkDayData> = new Map(JSON.parse(workdaysInLocalStorage))
 
-    if (workdays.has(dateCurrent)) {
+    console.log("workdayInLocalStorage exist")
+    console.log("workdays load in localstorage  to data: ", workdaysMapData)
 
-      let workday = workdays.get(dateCurrent)
+    if (workdaysMapData.has(dateCurrent)) {
+      console.log("workday find with key: ", dateCurrent)
+      let workdayCurrentData = workdaysMapData.get(dateCurrent)
 
-      if (!workday ) {
-        return
-      }
-
-      const workdayIntance: WorkDay = WorkDay.toDomain(workday)
-      console.log("accounts in worlday cosntructor")
-      console.log(workday?.accountsInDay)
-      this.wordDay = workdayIntance
-      return  
-
-      if (workday) {
-        //@ts-ignore
-        this.wordDay = WorkDay.toDomain(workday)
+      if (workdayCurrentData) {
+        console.log(workdayCurrentData, "transforming in intance class WorkDay")
+        this.transformWorkdayDataInDomain(workdayCurrentData)
       }
     }
     else {
-      this.wordDay = workDayFactory()
+      this.workdayCurrent = workDayFactory()
     }
+  }
+
+  private getWorkdayInLocalStorage(): Map<string, WorkDayData> {
+    if (!browser) {
+      return new Map()
+    }
+
+    const workdayInLocalStorage: string | null = localStorage.getItem('workdays')
+    if (!workdayInLocalStorage) {
+      return new Map()
+    }
+
+    return  new Map(JSON.parse(workdayInLocalStorage)) 
+
+  }
+
+  private transformWorkdayDataInDomain(workdayCurrentData: WorkDayData): void {
+
+    const workdayIntance: WorkDay = WorkDay.toDomain(workdayCurrentData)
+    console.log("accounts in worlday cosntructor")
+    console.log(workdayCurrentData?.accountsInDay)
+    this.workdayCurrent = workdayIntance
+
   }
 
 
@@ -62,44 +73,47 @@ export class Manager {
   }
 
 
-  public getWorkDay(): WorkDay  {
+  public getWorkDay(): WorkDay {
 
-    if (this.wordDay) {
-      return this.wordDay
-    } 
+    if (this.workdayCurrent) {
+      return this.workdayCurrent
+    }
 
     throw new Error('Workday dont faund')
-    
+
   }
 
 
-  public saveWorkdays(newWorkday: WorkDay): void{
+  public saveWorkdays(newWorkday: WorkDay): void {
     if (!browser) {
       return
     }
 
-    const workDayInLocalStorage: string | null = localStorage.getItem('workdays')
-    const date : string = new Date().toLocaleDateString("pt-BR")
+    const workDayInLocalStorage: Map<string, WorkDayData> = this.getWorkdayInLocalStorage()
+    const date: string = new Date().toLocaleDateString("pt-BR")
 
-    if (!workDayInLocalStorage) {
+    
+
+    if (workDayInLocalStorage.size == 0) {
       console.log("work day não existe")
       const workdayTemp: Map<string, WorkDayData> = new Map()
 
       workdayTemp.set(date, newWorkday.toJson())
-
-      localStorage.setItem('workdays', JSON.stringify(Array.from(workdayTemp.entries())))
-
+      this.saveWorkdayInLocalStorage(workdayTemp)
       console.log(localStorage.getItem('workdays'))
-
       return
     }
 
-    let currentWorkday: Map<string, WorkDayData> = new Map(JSON.parse(workDayInLocalStorage))
-    console.log("manager / saveWork: state work in runtime")
-    console.log(newWorkday)
-    currentWorkday.set(date, newWorkday.toJson())
+    console.log("manager / saveWorkDATA: state work in runtime")
+    console.log(newWorkday.toJson())
+    workDayInLocalStorage.set(date, newWorkday.toJson())
 
-    localStorage.setItem('workdays', JSON.stringify(Array.from(currentWorkday.entries())))
+    this.saveWorkdayInLocalStorage(workDayInLocalStorage)
   }
-  
+
+  private saveWorkdayInLocalStorage(workday: Map<string, WorkDayData>): void {
+    localStorage.setItem('workdays', JSON.stringify(Array.from(workday.entries())))
+ 
+  }
+
 }

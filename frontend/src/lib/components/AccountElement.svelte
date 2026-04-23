@@ -10,6 +10,7 @@
   import { PickaxeIcon } from "@lucide/svelte"
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
   import { serviceList } from "$lib/constants/srevices"
+    import { onMount } from "svelte";
 
   let { account, idLabel, updateAccountsInWorkday}: { account: Account; idLabel: number, updateAccountsInWorkday: (account: Account) => void } = $props();
 
@@ -25,7 +26,8 @@
   }
 
   let serviceSelected: ServiceEnflatable | ServiceFood | null = $state(null)
- 
+
+  
 
   function handleShowClosedFrame() {
     if (!frameClosed) {
@@ -60,11 +62,19 @@
 
   function handleCreateService(event: MouseEvent) {
     if (serviceSelected) {
-      console.log(account)
       account.addService(serviceSelected)
+      console.log(`accout ${account.getName()} have a new service added: ${serviceSelected} log: HandleCreateService`, account)
       updateAccountsInWorkday(account)
     }
+
+    else {
+      console.log("handleCreateService: serviceSelect undefined -> ",serviceSelected)
+    }
   }
+  onMount(() => {
+    updateAccountsInWorkday(account)
+    console.log(`log account: ${account.getName()} : `,account)
+  })
 </script>
 
   <FrameContainer bind:this={frameClosed}>

@@ -39,6 +39,13 @@ export class WorkDay {
   }
 
   public static toDomain(data: WorkDayData): WorkDay {
+    const accountIndayDomain: Account[] = data.accountsInDay.map((accountData) => {
+      return Account.toDomain(accountData)
+    })
+
+    console.log("accountInDayDomain in Workday is: ", accountIndayDomain)
+
+
     const workday: WorkDay = new WorkDay()
     workday.id = data.id
     workday.date = data.date
@@ -46,10 +53,7 @@ export class WorkDay {
     workday.startedAt = data.startedAt
     workday.pait = data.pait
     workday.paitAt = data.paitAt
-    workday.accountsInDay = data.accountsInDay.map((accounts) => {
-      return Account.toDomain(accounts)
-    })
-
+    workday.accountsInDay = accountIndayDomain 
     return workday
   }
 
@@ -63,6 +67,8 @@ export function workDayFactory(): WorkDay{
   workday.date = new Date().toLocaleDateString('pt-BR')
   workday.status = 'undefined'
   workday.pait = false
+
+  console.log("created a new workday: " + workday.date + " is value is: ", workday)
 
   return workday
 

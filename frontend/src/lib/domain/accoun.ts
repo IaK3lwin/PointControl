@@ -1,7 +1,7 @@
 import ServiceInflatable from "$lib/components/ServiceInflatable.svelte"
-import { GalleryThumbnailsIcon } from "@lucide/svelte"
+import { GalleryThumbnailsIcon, Type } from "@lucide/svelte"
 import {  Cent, centFactory, type CentData, type CentI } from "./cents"
-import { Service, type ServiceBase, type ServiceEnflatable, type ServiceEnflatableData, type ServiceFood, type ServiceFoodData } from "./services"
+import { Service, ServiceEnflatable, ServiceFood, type ServiceBase, type ServiceEnflatableData, type ServiceFoodData } from "./services"
 import { TypeService } from "./typeServices"
 import {v4 as uuid} from "uuid"
 
@@ -85,14 +85,26 @@ export class Account {
 
   public static toDomain(data: AccountData) : Account {
     const account: Account = new Account(data.nameTag)
+    const serviceDomain: (ServiceEnflatable | ServiceFood)[] = []
     account.id = data.id
     account.status = data.status
     account.createAt = data.createAt
     account.typePayment = data.typePayment
     account.price = Cent.toDomain(data.price)
-    data.service.map((serviceData) => {
-      Service.toDomain(serviceData)
+    console.log(`data.service: `, data.service)
+    data.service.forEach((service) => {
+      if (service.type == TypeService.ENFLATABLE) {
+        serviceDomain.push(ServiceEnflatable.toDomain(service as ServiceEnflatableData))
+        return
+      }
+
+      serviceDomain.push(ServiceFood.toDomain(service as ServiceFoodData))
+
     }) 
+
+    account.service = serviceDomain
+
+    console.log("Account toDomain  Finish, yours services data convert to domain: ", account.service)
 
     return account
   }
