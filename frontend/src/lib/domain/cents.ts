@@ -23,7 +23,41 @@ export class Cent  implements CentI{
     this.value = 0
   }
 
-  
+  public getCent(): number {
+    return this.value
+  }
+
+  public setValue(value: string | number): void {
+    if (typeof value == 'string') {
+      this.value = Cent.convertValueToCent(value)
+    } else {
+      this.value = value
+    }
+
+
+  }
+
+  public static convertValueToCent(value: string) : number{
+    if (typeof value == 'number') {
+        return Math.round(value * 100)
+    }
+
+    const cleaned = value
+		.trim()
+		.replace(/\s/g, '')
+		.replace('R$', '')
+    .replace(' R$ ', '')
+		.replace(/\./g, '') // remove separador milhar
+		.replace(',', '.')
+
+    const inputNumber: number = Number(cleaned)
+
+    if (Number.isNaN(inputNumber)) {
+      throw new Error("Valor inválido")
+    }
+
+    return Math.round(inputNumber * 100)
+  } 
 
   public toReal(cents?: number): string {
     
@@ -43,6 +77,7 @@ export class Cent  implements CentI{
 		.trim()
 		.replace(/\s/g, '')
 		.replace('R$', '')
+    .replace(' R$ ', '')
 		.replace(/\./g, '') // remove separador milhar
 		.replace(',', '.')
 
@@ -58,6 +93,15 @@ export class Cent  implements CentI{
 
   }
 
+  public sumValue(value: number): void {
+    this.value += value
+  }
+
+  public subtractValue(value: number): void {
+    let result = this.value - value
+    console.log("valor de entrada: ", value, " valor atual em centavos : ", this.value)
+    this.value = result
+  } 
 
   public toJson() : CentData {
     return {

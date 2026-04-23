@@ -89,6 +89,7 @@ export class ServiceFood extends Service{
 
 }
 
+
 export type TimesOptions = 5 | 10 | null
 
 
@@ -143,7 +144,10 @@ export function serviceFoodFactory(name: string, price?: Cent): ServiceFood {
   const service = new ServiceFood(name)
 
   if (price) {
-    service.setPrice(price.toReal()) 
+    if (price.getCent() == Cent.convertValueToCent("5,00")) {
+      service.setPrice(price.toReal(Cent.convertValueToCent("5,00"))) 
+
+    }
   }
 
   return  service

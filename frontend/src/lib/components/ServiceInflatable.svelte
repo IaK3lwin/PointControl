@@ -1,108 +1,60 @@
 <script lang="ts">
 
-  import { ServiceEnflatable } from "$lib/domain/services";
-
+  import { ServiceEnflatable, ServiceFood } from "$lib/domain/services";
+	import { type TimesOptions as ValuesTimeOption} from "$lib/domain/services"
+    import { TimerResetIcon } from "@lucide/svelte";
 
 	let {
-		service
-	}: { service : ServiceEnflatable } = $props();
-
-  
-  let startedAt = $state<number | null>();
-	let finished = $derived(service.isFinish);
-	let now = $state(Date.now());
-	let frameId: number | null = null;
-	
-	function startTimer() {
-		if (startedAt || finished) return;
-
-		startedAt = Date.now();
-		loop();
-	}
-
-	function loop() {
-		now = Date.now();
-
-		if (remainingSeconds <= 0) {
-			finished = true;
-			cancelLoop();
-			return;
+		service,
+		change
+	}: { service : ServiceEnflatable, change : (service: ServiceEnflatable | ServiceFood) => void } = $props();
+	let minselected: string | null = $state(null)
+	$effect(() => {
+		if (minselected) {
+			console.log('esse é o valor; ', minselected)
+			service.setPrice(minselected)
 		}
+		change(service)
+	})	
 
-		frameId = requestAnimationFrame(loop);
-	}
-
-	function cancelLoop() {
-		if (frameId) {
-			cancelAnimationFrame(frameId);
-			frameId = null;
-		}
-	}
-
-	const timeDuration = service?.timeDuration ? service.timeDuration : 0
-
-	const elapsedSeconds = $derived.by(() => {
-		if (!startedAt) return 0;
-		return Math.floor((now - startedAt) / 1000);
-	});
-	
-	const remainingSeconds = $derived.by(() => {
-		return Math.max(service?.timeDuration ?? 0 - elapsedSeconds, 0);
-	});
-
-	const progress = $derived.by(() => {
-		return ((service?.timeDuration ?? 0 - remainingSeconds) / timeDuration) * 100;
-	});
-
-	const timeLabel = $derived.by(() => {
-		const min = Math.floor(remainingSeconds / 60);
-		const sec = remainingSeconds % 60;
-
-		return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-	});
+		
 </script>
 
 <svelte:head>
-	<title>{name}</title>
+	<title></title>
 </svelte:head>
 
 <div class="card">
 	<div class="top">
 		<div>
-			<h2>{name}</h2>
+			<h2>{service.getName()}</h2>
 			<p>{service.getPrice().toReal(service.getPrice().toCent())}</p>
 		</div>
 
-		<span class:running={startedAt && !finished} class:done={finished}>
-			{#if finished}
-				Finalizado
-			{:else if startedAt}
-				Em andamento
-			{:else}
-				Aguardando
-			{/if}
+		<div>
+			<select bind:value={minselected}>
+				{#each [5, 10] as value}
+					<option value={Intl.NumberFormat('pt-BR', { style : 'currency', currency : 'BRL'}).format(value)}>{value}min</option>	
+				{/each}
+			</select>
+		</div>
+
+		<span >
+			{service.isFinish ? 'acabou' : 'aguardando'}
 		</span>
 	</div>
 
 	<div class="timer">
-		<div class="time">{timeLabel}</div>
+		<div class="time"></div>
 
 		<div class="bar">
-			<div class="fill" style:width={`${progress}%`}></div>
+			<div class="fill"></div>
 		</div>
 	</div>
 
 	<button
-		onclick={startTimer}
-		disabled={!!startedAt || finished}
 	>
-		{#if finished}
-			Usado
-		{:else if startedAt}
-			Rodando...
-		{:else}
-			Iniciar Timer
-		{/if}
+	
 	</button>
 </div>
 
@@ -112,7 +64,9 @@
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 16px;
-		background: #111;
+		background: #10111df8;
+		border: 1px solid rgb(255, 255, 255);
+		backdrop-filter: blur(10px) opacity(5%);
 		color: white;
 	}
 

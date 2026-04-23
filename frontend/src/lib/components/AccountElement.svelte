@@ -10,10 +10,10 @@
   import { PickaxeIcon } from "@lucide/svelte"
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
   import { serviceList } from "$lib/constants/srevices"
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
-  let { account, idLabel, updateAccountsInWorkday}: { account: Account; idLabel: number, updateAccountsInWorkday: (account: Account) => void } = $props();
-
+  let { account, idLabel, updateAccount}: { account: Account; idLabel: number, updateAccount: (account: Account) => void } = $props();
+  let serviceUpdatedState: (ServiceEnflatable | ServiceFood)[] = $state(account.service)
   let frameClosed: FrameContainer | null = $state(null);
   let frameAddService: FrameContainer | null = $state(null);
 
@@ -57,24 +57,30 @@
 
     account.status = AccountStatus.CLOSED
     
-    updateAccountsInWorkday(account)
+    updateAccount(account)
   }
 
   function handleCreateService(event: MouseEvent) {
     if (serviceSelected) {
       account.addService(serviceSelected)
       console.log(`accout ${account.getName()} have a new service added: ${serviceSelected} log: HandleCreateService`, account)
-      updateAccountsInWorkday(account)
+      serviceUpdatedState = account.service
+      updateAccount(account)
     }
 
     else {
       console.log("handleCreateService: serviceSelect undefined -> ",serviceSelected)
     }
   }
-  onMount(() => {
-    updateAccountsInWorkday(account)
-    console.log(`log account: ${account.getName()} : `,account)
-  })
+
+  function handleChangeService(serviceCurrent: ServiceEnflatable | ServiceFood) {
+    serviceUpdatedState.map((services) => {
+      if (services.getId() == serviceCurrent.getId()) {
+        return serviceCurrent
+      }
+    })
+  }
+  
 </script>
 
   <FrameContainer bind:this={frameClosed}>
@@ -144,11 +150,11 @@
   <!-- Container dos serciços-->
   <section id="containerService" style:--random-color={randomColor("1")}>
     <span id="wrapperService">
-      {#each account.service as service}
+      {#each serviceUpdatedState as service}
         {#if service.type == TypeService.FOOD}
-          <ServiceFoodComponent {service} />
+          <ServiceFoodComponent {service} change={handleChangeService} />
         {:else}
-          <ServiceInflatable service={service as ServiceEnflatable} />
+          <ServiceInflatable service={service as ServiceEnflatable} change={handleChangeService} />
         {/if}
       {:else}
         <WarnComponent
