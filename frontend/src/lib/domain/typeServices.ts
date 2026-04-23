@@ -1,4 +1,4 @@
 export enum TypeService{
-  INFLATABLE,
-  FOOD
+  ENFLATABLE = "inflatable",
+  FOOD = "food"
 }

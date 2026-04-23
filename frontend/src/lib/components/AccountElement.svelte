@@ -1,18 +1,31 @@
 <script lang="ts">
-  import { AccountStatus, type Account, type TypePayment } from "$lib/domain/accoun";
-  import randomColor from "$lib/constants/colors";
-  import { TypeService } from "$lib/domain/typeServices";
-  import WarnComponent from "./WarnComponent.svelte";
-  import ServiceInflatable from "./ServiceInflatable.svelte";
-  import ServiceFoodComponent from "./ServiceFoodComponent.svelte";
+  import { AccountStatus, type Account, type TypePayment } from "$lib/domain/accoun"
+  import randomColor from "$lib/constants/colors"
+  import { TypeService } from "$lib/domain/typeServices"
+  import WarnComponent from "./WarnComponent.svelte"
+  import ServiceInflatable from "./ServiceInflatable.svelte"
+  import ServiceFoodComponent from "./ServiceFoodComponent.svelte"
   import "$lib/select.css"
-  import FrameContainer from "./FrameContainer.svelte";
-  import { PickaxeIcon } from "@lucide/svelte";
+  import FrameContainer from "./FrameContainer.svelte"
+  import { PickaxeIcon } from "@lucide/svelte"
+  import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
+  import { serviceList } from "$lib/constants/srevices"
 
   let { account, idLabel, updateAccountsInWorkday}: { account: Account; idLabel: number, updateAccountsInWorkday: (account: Account) => void } = $props();
 
   let frameClosed: FrameContainer | null = $state(null);
   let frameAddService: FrameContainer | null = $state(null);
+
+  let typeValueOnChange: TypeService | null = $state(null)
+  function handleOnchangeTypeService(event: Event)  {
+        let select : HTMLSelectElement = event.currentTarget as HTMLSelectElement
+
+        typeValueOnChange = select.value as TypeService
+
+  }
+
+  let serviceSelected: ServiceEnflatable | ServiceFood | null = $state(null)
+ 
 
   function handleShowClosedFrame() {
     if (!frameClosed) {
@@ -34,15 +47,30 @@
     const data = new FormData(event.currentTarget as HTMLFormElement)
     const response = data.get('typePayment')?.toString() ?? null
     if (response) {
-      account.typePayment = response as TypePayment 
+      account.setTypePayment(response as TypePayment) 
     }
     else {
-      account.typePayment = null
+      account.setTypePayment(null) 
     }
 
     account.status = AccountStatus.CLOSED
     
     updateAccountsInWorkday(account)
+  }
+
+  let typeAddService: TypeService | null = $state(null)
+  function handleSubmitAddService(event: SubmitEvent) {
+    event.preventDefault()
+    
+  }
+  
+
+  function handleCreateService(event: MouseEvent) {
+    if (serviceSelected) {
+      console.log(account)
+      account.addService(serviceSelected)
+      updateAccountsInWorkday(account)
+    }
   }
 </script>
 
@@ -60,8 +88,36 @@
   </FrameContainer>
 
   <FrameContainer bind:this={frameAddService}>
+
     <h1>adicionar</h1>
-    <form></form>
+    <span>
+
+      <label for="typeService">Tipo do serviço</label>
+      <select name="typeService" id="typeService" onchange={handleOnchangeTypeService}>
+        {#each Object.values(TypeService) as value, index (index)}
+          <option value={value}>{value == 'food' ? 'lanche' : 'brinquedo'}</option>
+        {/each}
+      </select>
+
+    </span> 
+
+    {#if typeValueOnChange == TypeService.FOOD}
+      <h2>Qual lanche?</h2>
+      <select name="serviceCurrent" id="serviceCurrent" bind:value={serviceSelected}>
+        {#each serviceList.get(TypeService.FOOD) as service}
+          <option value={service}>{service.getName()}</option>
+        {/each}
+      </select>
+    {:else}
+      <h2>Qual brinquedo:</h2>
+      <select name="serviceCurrent" id="serviceCurrent" bind:value={serviceSelected}>
+        {#each serviceList.get(TypeService.ENFLATABLE) as service}
+          <option value={service}>{service.getName()}</option>
+        {/each}
+      </select>
+    {/if}
+   
+    <button onclick={handleCreateService}>Criar</button>
   </FrameContainer>
 
 <article style:--random-color={randomColor("2")}>
@@ -74,22 +130,22 @@
 
     <div style:--random-color={randomColor("1")}>
       <strong>cliente:</strong>
-      {account.nameTag}
+      {account.getName()}
     </div>
 
     <div style:--random-color={randomColor("1")}>
-      <strong>total</strong>: {account.total.toReal(account.total.value)}
+      <strong>total</strong>: {account.price.toReal(account.price.toCent(""))}
     </div>
   </aside>
 
   <!-- Container dos serciços-->
   <section id="containerService" style:--random-color={randomColor("1")}>
     <span id="wrapperService">
-      {#each account.services as service}
+      {#each account.service as service}
         {#if service.type == TypeService.FOOD}
           <ServiceFoodComponent {service} />
         {:else}
-          <ServiceInflatable {service} />
+          <ServiceInflatable service={service as ServiceEnflatable} />
         {/if}
       {:else}
         <WarnComponent
@@ -227,4 +283,6 @@
   #formClosed input[type="submit"] {
     padding: .5rem;
   }
+
+
 </style>

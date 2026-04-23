@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import { type ServiceEnflatable } from "$lib/domain/services";
+  import { ServiceEnflatable } from "$lib/domain/services";
 
 
 	let {
@@ -39,17 +39,19 @@
 		}
 	}
 
+	const timeDuration = service?.timeDuration ? service.timeDuration : 0
+
 	const elapsedSeconds = $derived.by(() => {
 		if (!startedAt) return 0;
 		return Math.floor((now - startedAt) / 1000);
 	});
-
+	
 	const remainingSeconds = $derived.by(() => {
-		return Math.max(service.timeDuration - elapsedSeconds, 0);
+		return Math.max(service?.timeDuration ?? 0 - elapsedSeconds, 0);
 	});
 
 	const progress = $derived.by(() => {
-		return ((service.timeDuration - remainingSeconds) / service.timeDuration) * 100;
+		return ((service?.timeDuration ?? 0 - remainingSeconds) / timeDuration) * 100;
 	});
 
 	const timeLabel = $derived.by(() => {
@@ -68,7 +70,7 @@
 	<div class="top">
 		<div>
 			<h2>{name}</h2>
-			<p>{service.priceCent.toReal(service.priceCent.value)}</p>
+			<p>{service.getPrice().toReal(service.getPrice().toCent())}</p>
 		</div>
 
 		<span class:running={startedAt && !finished} class:done={finished}>

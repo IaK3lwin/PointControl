@@ -1,6 +1,7 @@
 import ServiceInflatable from "$lib/components/ServiceInflatable.svelte"
-import {  centFactory, type Cent } from "./cents"
-import type { ServiceBase, ServiceEnflatable, ServiceFood } from "./services"
+import { GalleryThumbnailsIcon } from "@lucide/svelte"
+import {  Cent, centFactory, type CentData, type CentI } from "./cents"
+import { Service, type ServiceBase, type ServiceEnflatable, type ServiceEnflatableData, type ServiceFood, type ServiceFoodData } from "./services"
 import { TypeService } from "./typeServices"
 import {v4 as uuid} from "uuid"
 
@@ -11,53 +12,95 @@ export enum AccountStatus  {
 
 export type TypePayment = 'monay' | 'credit' | 'pix' | null
 
-export type Account = {
-
+export type AccountData = {
   id: string
   status : AccountStatus
-  nameTag: string
-  createdAt : string
+  nameTag : string
+  createAt: string
   typePayment: TypePayment
-  total : Cent
-  services: (ServiceEnflatable | ServiceFood)[] 
+  price: CentData
+  service: (ServiceEnflatableData | ServiceFoodData)[]
+}
 
-  addService : (service : ServiceEnflatable | ServiceFood) => void
-  removeService : (id : string) => void
-  closedService : ()  => void
+export class Account {
+  private id: string = ""
+  public status: AccountStatus
+  private nameTag: string
+  private createAt: string 
+  private typePayment: TypePayment
+  price: Cent
+  service: (ServiceEnflatable | ServiceFood)[]
+  
+  constructor(name: string) {
+    this.id = uuid()
+    this.status = AccountStatus.OPEN
+    this.nameTag = name
+    this.createAt = new Date().toLocaleDateString('pt-BR')
+    this.typePayment = null
+    this.price = centFactory()
+    this.service = []
+  }
+
+  public addService(service: ServiceEnflatable | ServiceFood): void {
+    this.service.push(service)
+  }
+
+  public removeService(): void {
+    //TODO: do implementations
+  }
+
+  public closedService(): void {
+    //TODO: do implementations
+  }
+
+  public getName(): string {
+    return this.nameTag
+  }
+
+  public getId() : string {
+    return this.id
+  }
+
+  public getTypePayment(): TypePayment {
+    return this.typePayment
+  }
+
+  public setTypePayment(type: TypePayment): void {
+    this.typePayment = type
+  }
+
+  public toJson(): AccountData {
+    return {
+      id : this.id,
+      status: this.status,
+      nameTag : this.nameTag,
+      createAt : this.createAt,
+      typePayment : this.typePayment,
+      price : this.price.toJson(),
+      service : this.service.map((service) => {
+        return service.toJson() 
+      })
+    }
+  } 
+
+  public static toDomain(data: AccountData) : Account {
+    const account: Account = new Account(data.nameTag)
+    account.id = data.id
+    account.status = data.status
+    account.createAt = data.createAt
+    account.typePayment = data.typePayment
+    account.price = Cent.toDomain(data.price)
+    data.service.map((serviceData) => {
+      Service.toDomain(serviceData)
+    }) 
+
+    return account
+  }
+
 
 }
 
-
 export function accountFactory(name : string) : Account {
-
-  
-  function addService(service : ServiceEnflatable | ServiceFood) {
-    
-    account.services.push(service)    
-  }
-  
-  function removeService() {
-    //TODO: do implementation
-  }
-  
-  function closedService() {
-    //TODO: do a implementation
-  }
-  
-  const account: Account = {
-    id : uuid(),
-    nameTag : name,
-    status : AccountStatus.OPEN,
-    total : centFactory(),
-    typePayment : null,
-    createdAt : new Date().toLocaleDateString('pt-BR'),
-    services : [],
-    addService,
-    removeService,
-    closedService
-    
-  }
-
-  return account
+  return new Account(name)
 
 }

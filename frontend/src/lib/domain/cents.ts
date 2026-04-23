@@ -1,21 +1,44 @@
-export type Cent = {
+import { browser } from "$app/environment"
 
-  value : number
+
+export interface CentI {
 
   toReal : (cents: number) => string
   toCent: (input: string) => number
 
 }
 
-export function centFactory(valueInReal ?: string) : Cent{
+export type CentData = {
+ value : number
+}
 
-  let value : number = 0
-  
-  if (valueInReal) {
-    value = toCent(valueInReal)
+export class Cent  implements CentI{
+  private value: number
+
+  constructor(value ?: number) {
+    if (value) {
+      this.value = value
+      return
+    }
+    this.value = 0
   }
 
-  function toCent(input: string): number {
+  
+
+  public toReal(cents?: number): string {
+    
+    return new Intl.NumberFormat("pt-BR", {
+      style : 'currency',
+      currency : 'BRL'
+    }).format(cents ?? this.value / 100)
+
+  }
+
+  public toCent(input?: string): number {
+    if (!input) {
+      return this.value
+    }
+
     const cleaned = input
 		.trim()
 		.replace(/\s/g, '')
@@ -25,27 +48,51 @@ export function centFactory(valueInReal ?: string) : Cent{
 
     const inputNumber: number = Number(cleaned)
 
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(this.value)) {
       throw new Error("Valor inválido")
     }
 
-    value = Math.round(inputNumber * 100)
+    this.value = Math.round(inputNumber * 100)
 
-    return value
+    return this.value
 
   }
 
-  function toReal(cents ?: number) : string {
-    return new Intl.NumberFormat("pt-BR", {
-      style : 'currency',
-      currency : 'BRL'
-    }).format(cents ?? value / 100)
-  } 
 
-
-  return {
-    value : value,
-    toCent,
-    toReal
+  public toJson() : CentData {
+    return {
+      value : this.value
+    }
   }
+
+  public static toDomain(data: CentData) : Cent {
+    return new Cent(data.value)
+  }
+
+}
+
+export function centFactory(valueInReal ?: string) : Cent{
+  if (!browser) {
+    return new Cent()
+  }
+    const cleaned = valueInReal ?? ""
+		.trim()
+		.replace(/\s/g, '')
+		.replace('R$', '')
+		.replace(/\./g, '') // remove separador milhar
+		.replace(',', '.')
+    .replace(",", ".")
+
+
+    const inputNumber: number = Number(cleaned.replace(",", "."))
+
+    console.log("inputNumber: ",inputNumber)
+
+    if (Number.isNaN(inputNumber)) {
+      throw new Error("Valor inválido")
+    }
+
+  return new Cent(inputNumber)
+
+
 }

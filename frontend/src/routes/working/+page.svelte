@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Manager } from "$lib/domain/manager"
-  import type { WorkDay } from "$lib/domain/workDay"
-  import {AccountStatus, type Account} from "$lib/domain/accoun"
+  import { WorkDay } from "$lib/domain/workDay"
+  import {AccountStatus, Account} from "$lib/domain/accoun"
   import AccountElement from "$lib/components/AccountElement.svelte"
   import WarnComponent from "$lib/components/WarnComponent.svelte"
   import ButtonOptions from "$lib/components/ButtonOptions.svelte"
