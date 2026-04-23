@@ -45,8 +45,14 @@ export class Service {
     return this.name
   }
 
+  public getId() {
+    return this.id
+  }
+
   public toJson(): any{
   }
+
+  
 
   public static toDomain(data: ServiceEnflatableData | ServiceFoodData): any {
   }
@@ -98,6 +104,16 @@ export class ServiceEnflatable extends Service{
     this.isFinish = false
   }
 
+  public setTimeOut(time: TimesOptions) {
+    this.timeDuration = time
+    if (time == 5) {
+      this.setPrice(this.getPrice().toReal())
+    } else {
+      this.setPrice(this.getPrice().toReal())
+    }
+
+  }
+
   public toJson(): ServiceEnflatableData {
     return {
       id : this.id,
@@ -136,17 +152,13 @@ export function serviceFoodFactory(name: string, price?: Cent): ServiceFood {
 
 export function serviceEnflatableFactory(name: string, price: Cent) : ServiceEnflatable {
 
-  const service: ServiceEnflatable = new ServiceEnflatable("name")
+  const service: ServiceEnflatable = new ServiceEnflatable(name)
 
-  function setTimeDuration(time: TimesOptions) : void {
-    service.timeDuration = time
-    if (time == 5) {
-      service.setPrice(price.toReal())
-    } else {
-      service.setPrice(price.toReal())
-    }
-  } 
-
+  if (price.toCent() == 5000) {
+    service.setTimeOut(5)
+  } else {
+    service.setTimeOut(10)
+  }
   
   return service
 }

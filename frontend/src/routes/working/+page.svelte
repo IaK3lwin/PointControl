@@ -11,6 +11,7 @@
   import randomColor from "$lib/constants/colors"
   import { onMount } from "svelte"
   import { browser } from "$app/environment"
+    import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services";
 
   const manager: Manager = Manager.get()
   let workday: WorkDay | null  = null
@@ -45,9 +46,28 @@
       return accounts
     })
     workday.accountsInDay = $accountsWritable
+
     
     manager.saveWorkdays(workday)
     
+  }
+
+  function handleUpdateService(accountCurrent: Account): void {
+    $accountsWritable.map((account) => {
+      console.log(account.getId())
+      if (account.getId() == accountCurrent.getId()) {
+        accountCurrent.service.map((service) => {
+          console.log(service.getName())
+          if (service.getId() == service.getId()) {
+            return accountCurrent
+          }
+        })
+      }
+    })
+
+    if (workday) {
+      manager.saveWorkdays(workday)
+    }
   }
 
 </script>
@@ -68,7 +88,7 @@
       {#each $accountsWritable as account, index (index)}
 
         {#if account.status == AccountStatus.OPEN}
-          <AccountElement account={account} idLabel={index} updateAccountsInWorkday={updateAccountsstate}/>
+          <AccountElement account={account} idLabel={index}  updateAccountsInWorkday={handleUpdateService}/>
         {/if}
         
       {/each}

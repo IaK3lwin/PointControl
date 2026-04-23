@@ -58,13 +58,6 @@
     updateAccountsInWorkday(account)
   }
 
-  let typeAddService: TypeService | null = $state(null)
-  function handleSubmitAddService(event: SubmitEvent) {
-    event.preventDefault()
-    
-  }
-  
-
   function handleCreateService(event: MouseEvent) {
     if (serviceSelected) {
       console.log(account)

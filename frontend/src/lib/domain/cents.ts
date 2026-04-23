@@ -72,9 +72,7 @@ export class Cent  implements CentI{
 }
 
 export function centFactory(valueInReal ?: string) : Cent{
-  if (!browser) {
-    return new Cent()
-  }
+  
     const cleaned = valueInReal ?? ""
 		.trim()
 		.replace(/\s/g, '')
@@ -86,7 +84,6 @@ export function centFactory(valueInReal ?: string) : Cent{
 
     const inputNumber: number = Number(cleaned.replace(",", "."))
 
-    console.log("inputNumber: ",inputNumber)
 
     if (Number.isNaN(inputNumber)) {
       throw new Error("Valor inválido")

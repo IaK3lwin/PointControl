@@ -25,13 +25,13 @@ serviceList.get(TypeService.FOOD)!.push(
 )
 
 serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('pula-pula', centFactory())
+	serviceEnflatableFactory('pula-pula', centFactory("10"))
 );
 
 serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('Escorregador', centFactory())
+	serviceEnflatableFactory('Escorregador', centFactory("5"))
 );
 
 serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('tigrinho', centFactory())
+	serviceEnflatableFactory('tigrinho', centFactory("10"))
 );
