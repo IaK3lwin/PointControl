@@ -3,7 +3,7 @@
   import randomColor from "$lib/constants/colors"
   import { TypeService } from "$lib/domain/typeServices"
   import WarnComponent from "./WarnComponent.svelte"
-  import ServiceInflatable from "./ServiceInflatable.svelte"
+  import ServiceInflatable from "./ServiceEnflatable.svelte"
   import ServiceFoodComponent from "./ServiceFoodComponent.svelte"
   import "$lib/select.css"
   import FrameContainer from "./FrameContainer.svelte"
@@ -11,6 +11,7 @@
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
   import { serviceList } from "$lib/constants/srevices"
   import { onMount } from "svelte";
+    import { accountsWritable } from "$lib/stores/listAccounts.svelte";
 
   let { account, idLabel, updateAccount}: { account: Account; idLabel: number, updateAccount: (account: Account) => void } = $props();
   let serviceUpdatedState: (ServiceEnflatable | ServiceFood)[] = $state(account.service)
@@ -26,6 +27,8 @@
   }
 
   let serviceSelected: ServiceEnflatable | ServiceFood | null = $state(null)
+  let priceTotal: string = $state("")
+  
 
   
 
@@ -65,6 +68,7 @@
       account.addService(serviceSelected)
       console.log(`accout ${account.getName()} have a new service added: ${serviceSelected} log: HandleCreateService`, account)
       serviceUpdatedState = account.service
+      account.price.sumValue(serviceSelected.getPrice().getCent())
       updateAccount(account)
     }
 
@@ -79,6 +83,10 @@
         return serviceCurrent
       }
     })
+    
+    account.service = serviceUpdatedState
+    priceTotal = account.updatePrice()
+   
   }
   
 </script>
@@ -143,7 +151,7 @@
     </div>
 
     <div style:--random-color={randomColor("1")}>
-      <strong>total</strong>: {account.price.toReal(account.price.toCent(""))}
+      <strong>total</strong>: {priceTotal}
     </div>
   </aside>
 
@@ -152,7 +160,7 @@
     <span id="wrapperService">
       {#each serviceUpdatedState as service}
         {#if service.type == TypeService.FOOD}
-          <ServiceFoodComponent {service} change={handleChangeService} />
+          <ServiceFoodComponent {service}  />
         {:else}
           <ServiceInflatable service={service as ServiceEnflatable} change={handleChangeService} />
         {/if}

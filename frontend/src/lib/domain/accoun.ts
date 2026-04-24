@@ -1,4 +1,4 @@
-import ServiceInflatable from "$lib/components/ServiceInflatable.svelte"
+import ServiceInflatable from "$lib/components/ServiceEnflatable.svelte"
 import { GalleryThumbnailsIcon, Type } from "@lucide/svelte"
 import {  Cent, centFactory, type CentData, type CentI } from "./cents"
 import { Service, ServiceEnflatable, ServiceFood, type ServiceBase, type ServiceEnflatableData, type ServiceFoodData } from "./services"
@@ -107,6 +107,16 @@ export class Account {
     console.log("Account toDomain  Finish, yours services data convert to domain: ", account.service)
 
     return account
+  }
+
+  public updatePrice(): string {
+    let total:Cent =  new Cent()
+    for (let service of this.service) {
+      total.sumValue(service.getPrice().getCent())
+    }
+    this.price.setValue(total.getCent())
+
+    return  this.price.toReal()
   }
 
 

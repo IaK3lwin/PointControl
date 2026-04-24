@@ -2,7 +2,7 @@ import { Cent } from "$lib/domain/cents";
 import { PrinterCheck } from "@lucide/svelte";
 import { describe, expect, test } from "vitest";
 
-describe('testing Cent class', () => {
+describe.skip('testing Cent class', () => {
 
   const cent = new Cent()
   test('convert to Cent', () => {

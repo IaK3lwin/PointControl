@@ -1,8 +1,6 @@
 import  { Cent, centFactory, type CentData } from "./cents"
 import { v4 as uuid} from "uuid"
 import { TypeService } from "./typeServices"
-import ServiceInflatable from "$lib/components/ServiceInflatable.svelte"
-import type { Type } from "@lucide/svelte"
 
 export type ServiceBase = {
   id : string
@@ -90,7 +88,7 @@ export class ServiceFood extends Service{
 }
 
 
-export type TimesOptions = 5 | 10 | null
+export type TimesOptions = 5 | 10 | 1 | null
 
 
 export class ServiceEnflatable extends Service{
