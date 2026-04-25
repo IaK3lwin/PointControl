@@ -24,11 +24,13 @@ export class Service {
   protected id: string
   protected name : string
   private priceCent: Cent
+  public tag: string 
 
   constructor(name: string) {
     this.name = name
     this.id = uuid()
     this.priceCent = centFactory()
+    this.tag = ""
   }
 
   public setPrice(cent: string) {

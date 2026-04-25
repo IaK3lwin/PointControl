@@ -10,8 +10,7 @@
   import { PickaxeIcon } from "@lucide/svelte"
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
   import { serviceList } from "$lib/constants/srevices"
-  import { onMount } from "svelte";
-    import { accountsWritable } from "$lib/stores/listAccounts.svelte";
+  import { accountsWritable } from "$lib/stores/listAccounts.svelte"
 
   let { account, idLabel, updateAccount}: { account: Account; idLabel: number, updateAccount: (account: Account) => void } = $props();
   let serviceUpdatedState: (ServiceEnflatable | ServiceFood)[] = $state(account.service)
@@ -80,13 +79,16 @@
   function handleChangeService(serviceCurrent: ServiceEnflatable | ServiceFood) {
     serviceUpdatedState.map((services) => {
       if (services.getId() == serviceCurrent.getId()) {
+        console.log(`Serviço encontrado: ${services.getName()} == ${serviceCurrent.getName()}`)
+        console.log("service mudado: ", serviceCurrent)
         return serviceCurrent
       }
     })
     
     account.service = serviceUpdatedState
+    console.log(`Serviço ${serviceCurrent.getName()} foi atualizado: ${serviceCurrent}`)
     priceTotal = account.updatePrice()
-   
+    updateAccount(account)
   }
   
 </script>
@@ -111,6 +113,7 @@
 
       <label for="typeService">Tipo do serviço</label>
       <select name="typeService" id="typeService" onchange={handleOnchangeTypeService}>
+        <option value={null} selected>escolha uma categoria</option>
         {#each Object.values(TypeService) as value, index (index)}
           <option value={value}>{value == 'food' ? 'lanche' : 'brinquedo'}</option>
         {/each}
@@ -121,6 +124,7 @@
     {#if typeValueOnChange == TypeService.FOOD}
       <h2>Qual lanche?</h2>
       <select name="serviceCurrent" id="serviceCurrent" bind:value={serviceSelected}>
+        <option value={null} selected>Selecione um lanche</option>
         {#each serviceList.get(TypeService.FOOD) as service}
           <option value={service}>{service.getName()}</option>
         {/each}
@@ -128,6 +132,7 @@
     {:else}
       <h2>Qual brinquedo:</h2>
       <select name="serviceCurrent" id="serviceCurrent" bind:value={serviceSelected}>
+        <option value={null} selected>esolha o brinquedo</option>
         {#each serviceList.get(TypeService.ENFLATABLE) as service}
           <option value={service}>{service.getName()}</option>
         {/each}
@@ -175,6 +180,9 @@
 
   <!--  Informações de status e operações possíveis em uma conta -->
   <header style:--random-color={randomColor("2")}>
+    <div>
+      <button>serviços ativos apenas</button>
+    </div>
     <div
       class="square"
       style:--color-standard={account.status.toString().toLocaleLowerCase() ==
@@ -251,7 +259,7 @@
 
     display: flex;
     flex-flow: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     overflow: hidden;
 
@@ -266,11 +274,13 @@
     overflow-y: scroll;
     display: flex;
     flex-flow: column nowrap;
+    justify-content: flex-start;
   }
 
   header {
     display: flex;
     justify-content: space-around;
+    gap: .4rem;
     width: 95%;
   }
 

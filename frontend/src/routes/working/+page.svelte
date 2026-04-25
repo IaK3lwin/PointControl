@@ -94,7 +94,7 @@
           <AccountElement
             {account}
             idLabel={index}
-            updateAccountsInWorkday={handleUpdateService}
+            updateAccount={handleUpdateService}
           />
         {/if}
       {/each}

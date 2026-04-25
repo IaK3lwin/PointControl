@@ -17,20 +17,30 @@
 
 	let price: string = $state(service.getPrice().toReal());
 
-	let isFinish: boolean = $state(false);
+	let isFinish: boolean = $state(service.isFinish);
 	let select: HTMLSelectElement | null = $state(null);
 	let buttonStar: HTMLButtonElement | null = $state(null);
 	let timeView: string = $state("00:00:00");
 	let isRun: boolean = $state(false);
 	let startTimeState: boolean = $state(false)
+	let coldownEffect: boolean = false
+	let tagName: string = $state(service.tag)
+
 
 	$effect(() => {
+		if (coldownEffect) {
+			return
+		}
+		coldownEffect = true
+		console.log("colddown ativo")
+		
 		console.log("effet codou");
 		if (minselected) {
 			price = minselected;
 			service.setPrice(minselected);
 		}
-		if (select) {
+
+		if (select != null) {
 			select.disabled = isFinish ? true : false;
 		}
 
@@ -38,8 +48,18 @@
 		if (isFinish) {
 			change(service)
 		}
+
+		console.log("tagname atualiza com valor de: ", tagName)
+		service.tag = tagName
+
 		change(service);
+
+		setTimeout(() => {
+			coldownEffect = false
+			console.log("coldown foi desabilitado")
+		}, 1000)
 	});
+
 
 	const time: Cronus = new Cronus();
 	function startTime() {
@@ -51,10 +71,13 @@
 			if (time.getIsfinish()) {
 				console.log("time acabou o tempo")
 				service.isFinish = time.getIsfinish()
+				isFinish = time.getIsfinish()
+				change(service)
 			}
-			isFinish = time.getIsfinish()
 			
 		});
+
+		console.log("testando o valor do minseletec")
 
 		if (minselected) {
 			console.log(minselected);
@@ -79,7 +102,8 @@
 	<title></title>
 </svelte:head>
 
-<div class="card">
+<div class="card" class:running={isRun} class:done={isFinish}>
+	<details>
 	<div class="top">
 		<div>
 			<h2>{service.getName()}</h2>
@@ -88,6 +112,7 @@
 
 		<div>
 			<select bind:value={minselected} bind:this={select}>
+				<option value={null} selected>tempo</option>
 				{#each [5, 10, 1] as value}
 					<option
 						value={Intl.NumberFormat("pt-BR", {
@@ -99,7 +124,7 @@
 			</select>
 		</div>
 
-		<span>
+		<span >
 			{#if isFinish}
 				"Terminou"	
 				{:else}
@@ -108,30 +133,37 @@
 		</span>
 	</div>
 
-	<div class="timer">
-		
-		<div class="time">{!isFinish ? timeView : 'Terminou'}</div>
-		
-
-		<div class="bar">
-			<div class="fill"></div>
+	<summary></summary>
+		<div class="fieldTag">
+			<label for="Apelido">apelido: </label>
+			<input type="text" bind:value={tagName} placeholder="Ex: Fulano">
 		</div>
-	</div>
-
-	{#if !startTimeState}
-	<button bind:this={buttonStar} onclick={startTime}>
-		<h2>Iniciar</h2>
-	</button>
-	{/if}
-	{#if startTimeState && !isFinish}
-	<button onclick={pauseTime}>
-		<h2>{isRun ? 'Pausar' : 'Continuar'}</h2>
-	</button>
+		<div class="timer" class:running={isRun} class:done={isFinish}>
 		
-	{/if}
+			<div class="time">{!isFinish ? timeView : 'Terminou'}</div>
+		
+			<div class="bar">
+				<div class="fill"></div>
+			</div>
+		</div>
+		{#if !startTimeState && !isFinish}
+		<button bind:this={buttonStar} onclick={startTime}>
+			<h2>Iniciar</h2>
+		</button>
+		{/if}
+		{#if startTimeState && !isFinish}
+		<button onclick={pauseTime}>
+			<h2>{isRun ? 'Pausar' : 'Continuar'}</h2>
+		</button>
+		
+		{/if}
+	</details>
 </div>
 
 <style>
+	summary {
+		width: 100%;
+	}
 	.card {
 		display: grid;
 		gap: 1rem;
@@ -167,12 +199,31 @@
 		background: #333;
 	}
 
+	.fieldTag {
+		display: flex;
+		gap: .4rem;
+
+		& input {
+			all: unset;
+		}
+
+	}	
+
 	.running {
 		background: #9a6b00;
 	}
 
 	.done {
-		background: #0a6d2a;
+		& span {
+			background: #0a6d2a;
+		} 
+		& button > h2, h2 {
+			color: #0a6d2a;
+
+		}	
+		.timer {
+			color: #0a6d2a;
+		}
 	}
 
 	.timer {
@@ -210,7 +261,7 @@
 	}
 
 	button:disabled {
-		opacity: 0.6;
+	opacity: 0.6;
 		cursor: not-allowed;
 	}
 </style>
