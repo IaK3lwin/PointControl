@@ -27,6 +27,7 @@ export class Manager {
     if (workdaysMapData.has(dateCurrent)) {
       console.log("workday find with key: ", dateCurrent)
       let workdayCurrentData = workdaysMapData.get(dateCurrent)
+      console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
 
       if (workdayCurrentData) {
         console.log(workdayCurrentData, "transforming in intance class WorkDay")

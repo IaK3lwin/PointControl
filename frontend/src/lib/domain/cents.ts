@@ -116,24 +116,12 @@ export class Cent  implements CentI{
 }
 
 export function centFactory(valueInReal ?: string) : Cent{
-  
-    const cleaned = valueInReal ?? ""
-		.trim()
-		.replace(/\s/g, '')
-		.replace('R$', '')
-		.replace(/\./g, '') // remove separador milhar
-		.replace(',', '.')
-    .replace(",", ".")
+  if (valueInReal) {
+    const newCent = new Cent(Cent.convertValueToCent(valueInReal))
+    return newCent
+  }
 
-
-    const inputNumber: number = Number(cleaned.replace(",", "."))
-
-
-    if (Number.isNaN(inputNumber)) {
-      throw new Error("Valor inválido")
-    }
-
-  return new Cent(inputNumber)
-
+  console.log("valor da moeda n inserido")
+  return new Cent()
 
 }

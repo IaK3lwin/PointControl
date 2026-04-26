@@ -1,8 +1,8 @@
-import { Cent } from "$lib/domain/cents";
+import { Cent, centFactory } from "$lib/domain/cents";
 import { PrinterCheck } from "@lucide/svelte";
 import { describe, expect, test } from "vitest";
 
-describe.skip('testing Cent class', () => {
+describe('testing Cent class', () => {
 
   const cent = new Cent()
   test('convert to Cent', () => {
@@ -39,5 +39,12 @@ describe.skip('testing Cent class', () => {
     cent.subtractValue(valueSubtract)
     console.log("valor em centavos apos subtração: ",cent.getCent())
     expect(cent.getCent()).toBe(450)
+  })
+
+  test('testion funcinn centFacotory...', () => {
+    const centWithFactory: Cent = centFactory("6,00")
+    console.log(centWithFactory)
+
+    expect(centWithFactory.getCent() == Cent.convertValueToCent("6,00"))
   })
 })

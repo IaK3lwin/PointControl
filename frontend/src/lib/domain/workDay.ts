@@ -40,6 +40,7 @@ export class WorkDay {
 
   public static toDomain(data: WorkDayData): WorkDay {
     const accountIndayDomain: Account[] = data.accountsInDay.map((accountData) => {
+      console.log("workday to domain conver account to domain: ", accountData)
       return Account.toDomain(accountData)
     })
 

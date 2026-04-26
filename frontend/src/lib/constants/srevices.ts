@@ -1,37 +1,29 @@
 import { centFactory } from '$lib/domain/cents';
 import {
+	ServiceEnflatable,
 	serviceFoodFactory,
 	serviceEnflatableFactory,
-	type ServiceFood,
-	type ServiceEnflatable
-} from '$lib/domain/services';
+	ServiceFood} from '$lib/domain/services';
 
 import { TypeService } from '$lib/domain/typeServices';
+const crepe = new ServiceFood("crepe")
+crepe.setPrice("6,00")
+const pipoca = new ServiceFood("pipoca")
+pipoca.setPrice("5,00")
+
+const pulapula = new ServiceEnflatable("pula-pula")
+const escorregador = new ServiceEnflatable("escorregador")
 
 export const serviceList: Map<TypeService, (ServiceFood | ServiceEnflatable)[]> = new Map([
-	[TypeService.FOOD, []],
-	[TypeService.ENFLATABLE, []]
+	[TypeService.FOOD, [
+		crepe,
+		pipoca
+	]],
+	[TypeService.ENFLATABLE, [
+		pulapula,
+		escorregador
+	]]
 ]);
 
-serviceList.get(TypeService.FOOD)!.push(
-	serviceFoodFactory('crepe', centFactory("6,00"))
-);
 
-serviceList.get(TypeService.FOOD)!.push(
-	serviceFoodFactory('pipoca', centFactory('5,00'))
-);
-serviceList.get(TypeService.FOOD)!.push(
-  serviceEnflatableFactory('cachorro-quente', centFactory('8,00'))
-)
-
-serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('pula-pula', centFactory("10"))
-);
-
-serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('Escorregador', centFactory("5"))
-);
-
-serviceList.get(TypeService.ENFLATABLE)!.push(
-	serviceEnflatableFactory('tigrinho', centFactory("10"))
-);
+console.log("[LOGGER] constantes done to use: ", serviceList)

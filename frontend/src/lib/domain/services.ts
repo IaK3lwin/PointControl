@@ -78,9 +78,16 @@ export class ServiceFood extends Service{
   }
 
   public static toDomain(data: ServiceFoodData): ServiceFood {
+    console.log("todomain serice init: ", data)
     const service: ServiceFood = new ServiceFood(data.name)
     service.id = data.id
-    service.setPrice(data.priceCent.value.toString())
+    if (data.priceCent) {
+      console.log("toDomain() log -> data.pricent found: ", data.priceCent )
+      service.setPrice(data.priceCent.value.toString())
+    } else {
+      console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
+      service.setPrice("0")
+    }
     service.type = data.type
 
     return service
@@ -130,7 +137,14 @@ export class ServiceEnflatable extends Service{
   public static toDomain(data: ServiceEnflatableData) : ServiceEnflatable {
     const service: ServiceEnflatable = new ServiceEnflatable(data.name)
     service.id = data.id
-    service.setPrice(data.priceCent.value.toString())
+    if (data.priceCent) {
+      console.log("toDomain() log -> data.pricent found: ", data.priceCent )
+      service.setPrice(data.priceCent.value.toString())
+    } else {
+      console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
+      service.setPrice("0") 
+    }
+
     service.type = data.type
     service.timeDuration = data.timeDuration
     service.isFinish = data.isFinish

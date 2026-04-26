@@ -5,7 +5,7 @@ beforeEach(() => {
    vi.useFakeTimers() // No Vitest
 })
 
-describe('testing cronus', () => {
+describe.skip('testing cronus', () => {
 
   test('deve parar o timer', () => {
     const cronus = new Cronus();

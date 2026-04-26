@@ -11,11 +11,13 @@
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
   import { serviceList } from "$lib/constants/srevices"
   import { accountsWritable } from "$lib/stores/listAccounts.svelte"
+    import { onMount } from "svelte";
 
   let { account, idLabel, updateAccount}: { account: Account; idLabel: number, updateAccount: (account: Account) => void } = $props();
   let serviceUpdatedState: (ServiceEnflatable | ServiceFood)[] = $state(account.service)
   let frameClosed: FrameContainer | null = $state(null);
   let frameAddService: FrameContainer | null = $state(null);
+  let servicesStandard: (ServiceEnflatable | ServiceFood)[] | null = $state(null)
 
   let typeValueOnChange: TypeService | null = $state(null)
   function handleOnchangeTypeService(event: Event)  {
@@ -90,6 +92,15 @@
     priceTotal = account.updatePrice()
     updateAccount(account)
   }
+
+  onMount(() => {
+    servicesStandard = []
+    serviceList.forEach((service) => {
+      if (servicesStandard)
+      service.forEach((serviceType) => {
+    servicesStandard?.push(serviceType)})
+    })
+  })
   
 </script>
 
@@ -125,8 +136,12 @@
       <h2>Qual lanche?</h2>
       <select name="serviceCurrent" id="serviceCurrent" bind:value={serviceSelected}>
         <option value={null} selected>Selecione um lanche</option>
-        {#each serviceList.get(TypeService.FOOD) as service}
+        {#each servicesStandard as service}
+        {#if service.type == TypeService.FOOD}
+        {console.log("Service food: ", service)}
           <option value={service}>{service.getName()}</option>
+            
+          {/if}
         {/each}
       </select>
     {:else}
@@ -165,6 +180,7 @@
     <span id="wrapperService">
       {#each serviceUpdatedState as service}
         {#if service.type == TypeService.FOOD}
+          {console.log(service.getPrice().toReal())}
           <ServiceFoodComponent {service}  />
         {:else}
           <ServiceInflatable service={service as ServiceEnflatable} change={handleChangeService} />
@@ -180,9 +196,6 @@
 
   <!--  Informações de status e operações possíveis em uma conta -->
   <header style:--random-color={randomColor("2")}>
-    <div>
-      <button>serviços ativos apenas</button>
-    </div>
     <div
       class="square"
       style:--color-standard={account.status.toString().toLocaleLowerCase() ==

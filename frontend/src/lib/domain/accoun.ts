@@ -92,14 +92,15 @@ export class Account {
     account.typePayment = data.typePayment
     account.price = Cent.toDomain(data.price)
     console.log(`data.service: `, data.service)
+
     data.service.forEach((service) => {
       if (service.type == TypeService.ENFLATABLE) {
+        console.log("account log convertion service to domain: ", service)
         serviceDomain.push(ServiceEnflatable.toDomain(service as ServiceEnflatableData))
-        return
+      } else {
+        console.log("account log convertion service to domain: ", service)
+        serviceDomain.push(ServiceFood.toDomain(service as ServiceFoodData))
       }
-
-      serviceDomain.push(ServiceFood.toDomain(service as ServiceFoodData))
-
     }) 
 
     account.service = serviceDomain
