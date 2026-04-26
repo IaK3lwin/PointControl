@@ -61,10 +61,36 @@ export class Service {
 //@ts-ignore
 export class ServiceFood extends Service{
   public type: TypeService
+  private quantity: number
 
   constructor(name: string) {
     super(name)
     this.type = TypeService.FOOD
+    this.quantity = 1
+  }
+
+  public getQuantity(): number {
+    return this.quantity
+  }
+
+  public getTotalValue() : string {
+    let priceBase = this.getPrice().getCent()
+    console.log("quantitiy: ", this.quantity)
+    let total = priceBase  * this.quantity
+    console.log("total value: ", this.getPrice().toReal(total))
+    console.log("total em centavos: ", total)
+    return this.getPrice().toReal(total)
+  }
+
+  public add(): void {
+    this.quantity++
+  }
+
+  public remove(): void {
+    if (this.quantity < 1 ) {
+      return
+    }
+    this.quantity--
   }
 
 

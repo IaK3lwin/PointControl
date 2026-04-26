@@ -18,6 +18,7 @@
   let frameClosed: FrameContainer | null = $state(null);
   let frameAddService: FrameContainer | null = $state(null);
   let servicesStandard: (ServiceEnflatable | ServiceFood)[] | null = $state(null)
+  let TypePaymentIsMoney: boolean = $state(false)
 
   let typeValueOnChange: TypeService | null = $state(null)
   function handleOnchangeTypeService(event: Event)  {
@@ -107,11 +108,20 @@
   <FrameContainer bind:this={frameClosed}>
     <form id="formClosed" onsubmit={handleSubmitClosedAccount}>
       <label for="typeAccount">forma de pagamento</label>
-      <select name="typePayment" id="formPayment" class="select-choices">
+      <select name="typePayment" id="formPayment" bind:value={TypePaymentIsMoney} class="select-choices">
         <option value="money">Dinheiro</option>
         <option value="credit">Crédito</option>
         <option value="pix"> <PickaxeIcon /> Pix</option>
       </select>
+
+      {#if TypePaymentIsMoney}
+      <label for="troco">troco</label>
+      <input type="number" name="troco" step=".1" placeholder="Ex: 5,00 (de troco)">
+      <p>troco de: </p>
+        
+      {/if}
+
+
 
       <input type="submit" value="Fechar">
     </form>
@@ -181,7 +191,7 @@
       {#each serviceUpdatedState as service}
         {#if service.type == TypeService.FOOD}
           {console.log(service.getPrice().toReal())}
-          <ServiceFoodComponent {service}  />
+          <ServiceFoodComponent service={service as ServiceFood}  />
         {:else}
           <ServiceInflatable service={service as ServiceEnflatable} change={handleChangeService} />
         {/if}

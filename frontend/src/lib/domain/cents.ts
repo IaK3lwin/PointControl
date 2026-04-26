@@ -16,7 +16,7 @@ export class Cent  implements CentI{
   private value: number
 
   constructor(value ?: number) {
-    if (value) {
+    if (value !== undefined) {
       this.value = value
       return
     }
@@ -60,13 +60,11 @@ export class Cent  implements CentI{
   } 
 
   public toReal(cents?: number): string {
-    
-    return new Intl.NumberFormat("pt-BR", {
-      style : 'currency',
-      currency : 'BRL'
-    }).format(cents ?? this.value / 100)
-
-  }
+	return new Intl.NumberFormat("pt-BR", {
+		style: "currency",
+		currency: "BRL"
+	}).format((cents ?? this.value) / 100)
+}
 
   public toCent(input?: string): number {
     if (!input) {
@@ -83,7 +81,7 @@ export class Cent  implements CentI{
 
     const inputNumber: number = Number(cleaned)
 
-    if (Number.isNaN(this.value)) {
+    if (Number.isNaN(inputNumber)) {
       throw new Error("Valor inválido")
     }
 
@@ -102,6 +100,10 @@ export class Cent  implements CentI{
     console.log("valor de entrada: ", value, " valor atual em centavos : ", this.value)
     this.value = result
   } 
+
+  public subtractReal(value: string): void {
+	  this.value -= Cent.convertValueToCent(value)
+  }  
 
   public toJson() : CentData {
     return {
