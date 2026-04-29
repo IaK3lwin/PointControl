@@ -60,8 +60,8 @@
     gap: 1rem;
     width: 80%;
     padding: 1rem;
-    background-color: rgba(196, 196, 196, 0.541);
-    backdrop-filter: blur(3px);
+    background-color: rgba(143, 143, 143, 0.541);
+    backdrop-filter: blur(5px);
     border: 1px solid white;
     border-radius: 0.5rem;
   }

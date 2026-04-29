@@ -13,8 +13,10 @@
    *  
    */
 
+   console.log("service food: ", service)
+
    let quantity: number = $state(1)
-   let priceView: string = $state(service.getTotalValue())
+   let priceView: string = $derived(service.getTotalValue())
 
 
    //handles

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Manager } from "$lib/domain/manager";
   import { WorkDay } from "$lib/domain/workDay";
-  import { AccountStatus, Account } from "$lib/domain/accoun";
-  import AccountElement from "$lib/components/AccountElement.svelte";
+  import { AccountStatus, Account, type AccountData } from "$lib/domain/accoun";
+  import AccountElement from "$lib/components/account/AccountElement.svelte";
   import WarnComponent from "$lib/components/WarnComponent.svelte";
   import ButtonOptions from "$lib/components/ButtonOptions.svelte";
   import { type OptionsButton } from "$lib/components/ButtonOptions.svelte";
@@ -35,7 +35,7 @@
     },
   ];
 
-  function updateAccountsstate(newAccount: Account) {
+  function handleSaveAccountInWorkday(newAccount: Account) {
     if (workday == null) {
       return;
     }
@@ -49,13 +49,12 @@
     manager.saveWorkdays(workday);
   }
 
-  function handleUpdateService(accountCurrent: Account): void {
+  function handleUpdateAccount(accountCurrent: Account): void {
 
-    accountsWritable.update((accounts) => {
-      accounts.map((account) => {
+    accountsWritable.update((accountsInWritable) => {
+      accountsInWritable.map((account) => {
         if (account.getId() == accountCurrent.getId()) {
           accountCurrent.service.map((service) => {
-            console.log(service.getName());
             if (service.getId() == service.getId()) {
               return accountCurrent;
             }
@@ -63,7 +62,7 @@
         }
       });
 
-      return accounts;
+      return accountsInWritable;
     });
 
     
@@ -80,7 +79,7 @@
     closed={() => {
       showCreateAccountPopup = false;
     }}
-    update={updateAccountsstate}
+    update={handleSaveAccountInWorkday}
   />
 {/if}
 
@@ -92,9 +91,9 @@
       {#each $accountsWritable as account, index (index)}
         {#if account.status == AccountStatus.OPEN}
           <AccountElement
-            {account}
+            accountProps={account}
             idLabel={index}
-            updateAccount={handleUpdateService}
+            updateAccount={handleUpdateAccount}
           />
         {/if}
       {/each}

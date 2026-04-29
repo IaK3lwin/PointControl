@@ -1,0 +1,1 @@
+export type TypeMessages = 'error' | 'sucess' | 'warning'

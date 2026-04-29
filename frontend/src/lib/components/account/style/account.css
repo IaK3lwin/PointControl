@@ -1,0 +1,121 @@
+article {
+  height: 90%;
+  min-width: 90%;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+  background-color: var(--random-color);
+
+  padding: 0.4rem;
+
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 0.1fr 1fr auto;
+  gap: 0.4rem;
+}
+
+aside {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin: 0 0.5rem;
+
+  &>* {
+    border: 1px solid;
+    border-radius: 0.5rem;
+    height: auto;
+
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+
+    background-color: var(--random-color);
+    backdrop-filter: brightness(20%) saturate(80%) opacity(50%);
+  }
+}
+
+section#containerService {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+
+  height: 95%;
+
+  backdrop-filter: blur(5px);
+  background-color: var(--random-color);
+}
+
+#wrapperService {
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+}
+
+header {
+  display: flex;
+  justify-content: space-around;
+  gap: .4rem;
+  width: 95%;
+}
+
+header div,
+button {
+  border: 1px solid black;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+  color: var(--color-standard);
+  background-color: var(--random-color);
+  display: flex;
+  justify-content: center;
+  align-items: cnter;
+  gap: .4rem;
+
+  & p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#formClosed label {
+  font-size: 1.3rem;
+
+}
+
+#formClosed {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+
+}
+
+#formClosed input[type="submit"] {
+  padding: .5rem;
+}
+
+.containerPop {
+  display: flex;
+  flex-flow: column;
+  justify-content: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  
+  & span {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1rem;
+  }
+}

@@ -33,8 +33,8 @@ export class Service {
     this.tag = ""
   }
 
-  public setPrice(cent: string) {
-    this.priceCent.toCent(cent)
+  public setPrice(cent: number) {
+    this.priceCent.setValue(cent)
   }
 
   public getPrice() : Cent {
@@ -75,6 +75,7 @@ export class ServiceFood extends Service{
 
   public getTotalValue() : string {
     let priceBase = this.getPrice().getCent()
+    console.log(priceBase)
     console.log("quantitiy: ", this.quantity)
     let total = priceBase  * this.quantity
     console.log("total value: ", this.getPrice().toReal(total))
@@ -107,13 +108,7 @@ export class ServiceFood extends Service{
     console.log("todomain serice init: ", data)
     const service: ServiceFood = new ServiceFood(data.name)
     service.id = data.id
-    if (data.priceCent) {
-      console.log("toDomain() log -> data.pricent found: ", data.priceCent )
-      service.setPrice(data.priceCent.value.toString())
-    } else {
-      console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
-      service.setPrice("0")
-    }
+    service.setPrice(data.priceCent.value) 
     service.type = data.type
 
     return service
@@ -141,9 +136,9 @@ export class ServiceEnflatable extends Service{
   public setTimeOut(time: TimesOptions) {
     this.timeDuration = time
     if (time == 5) {
-      this.setPrice(this.getPrice().toReal())
+      this.setPrice(this.getPrice().getCent())
     } else {
-      this.setPrice(this.getPrice().toReal())
+      this.setPrice(this.getPrice().getCent())
     }
 
   }
@@ -165,10 +160,10 @@ export class ServiceEnflatable extends Service{
     service.id = data.id
     if (data.priceCent) {
       console.log("toDomain() log -> data.pricent found: ", data.priceCent )
-      service.setPrice(data.priceCent.value.toString())
+      service.setPrice(data.priceCent.value)
     } else {
       console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
-      service.setPrice("0") 
+      service.setPrice(0) 
     }
 
     service.type = data.type
@@ -185,8 +180,7 @@ export function serviceFoodFactory(name: string, price?: Cent): ServiceFood {
 
   if (price) {
     if (price.getCent() == Cent.convertValueToCent("5,00")) {
-      service.setPrice(price.toReal(Cent.convertValueToCent("5,00"))) 
-
+      service.setPrice(Cent.convertValueToCent("5,00")) 
     }
   }
 

@@ -1,4 +1,4 @@
-import ServiceInflatable from "$lib/components/ServiceEnflatable.svelte"
+import ServiceInflatable from "$lib/components/ServiceEnflatableComponent.svelte"
 import { GalleryThumbnailsIcon, Type } from "@lucide/svelte"
 import {  Cent, centFactory, type CentData, type CentI } from "./cents"
 import { Service, ServiceEnflatable, ServiceFood, type ServiceBase, type ServiceEnflatableData, type ServiceFoodData } from "./services"
