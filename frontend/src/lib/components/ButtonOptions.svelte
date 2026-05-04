@@ -11,7 +11,7 @@
 
   } 
 
-  let {options} : {options : OptionsButton[]}  = $props()
+  let {options} : {options ?: OptionsButton[], onclick ?: Function}  = $props()
 
   let optionsVisible: boolean = $state(false)
 

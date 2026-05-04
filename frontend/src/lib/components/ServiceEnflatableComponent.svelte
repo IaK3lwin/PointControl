@@ -3,7 +3,8 @@
 	import { type TimesOptions as ValuesTimeOption } from "$lib/domain/services";
 	import Cronus from "$lib/domain/cronus";
 	import { browser } from "$app/environment";
-	import { onMount } from "svelte";
+	import { onDestroy, onMount } from "svelte";
+    import { Cent } from "$lib/domain/cents";
 
 	let {
 		service,
@@ -15,29 +16,26 @@
 
 	let minselected: string | null = $state(null);
 
-	let price: string = $state(service.getPrice().toReal());
+	let price: string = $derived(service.getPrice().toReal());
 
-	let isFinish: boolean = $state(service.isFinish);
+	let isFinish: boolean = $derived(service.isFinish);
 	let select: HTMLSelectElement | null = $state(null);
 	let buttonStar: HTMLButtonElement | null = $state(null);
 	let timeView: string = $state("00:00:00");
 	let isRun: boolean = $state(false);
 	let startTimeState: boolean = $state(false)
 	let coldownEffect: boolean = false
-	let tagName: string = $state(service.tag)
+	let tagName: string = $derived(service.tag)
 
 
+	
 	$effect(() => {
-		if (coldownEffect) {
-			return
-		}
-		coldownEffect = true
-		console.log("colddown ativo")
 		
 		console.log("effet codou");
 		if (minselected) {
 			price = minselected;
-			service.setPrice(minselected);
+			service.setPrice(Cent.convertValueToCent(minselected));
+			console.log("price service: ", price)
 		}
 
 		if (select != null) {
@@ -52,14 +50,10 @@
 		console.log("tagname atualiza com valor de: ", tagName)
 		service.tag = tagName
 
-		change(service);
 
-		setTimeout(() => {
-			coldownEffect = false
-			console.log("coldown foi desabilitado")
-		}, 1000)
+
+		
 	});
-
 
 	const time: Cronus = new Cronus();
 	function startTime() {
@@ -98,10 +92,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title></title>
-</svelte:head>
-
 <div class="card" class:running={isRun} class:done={isFinish}>
 	<details>
 	<div class="top">
@@ -133,7 +123,7 @@
 		</span>
 	</div>
 
-	<summary></summary>
+	<summary>{service.getName() + " || " + price}</summary>
 		<div class="fieldTag">
 			<label for="Apelido">apelido: </label>
 			<input type="text" bind:value={tagName} placeholder="Ex: Fulano">
@@ -142,9 +132,7 @@
 		
 			<div class="time">{!isFinish ? timeView : 'Terminou'}</div>
 		
-			<div class="bar">
-				<div class="fill"></div>
-			</div>
+		
 		</div>
 		{#if !startTimeState && !isFinish}
 		<button bind:this={buttonStar} onclick={startTime}>
@@ -166,6 +154,7 @@
 	}
 	.card {
 		display: grid;
+		width: auto;
 		gap: 1rem;
 		padding: 1rem;
 		border-radius: 16px;
@@ -237,18 +226,7 @@
 		text-align: center;
 	}
 
-	.bar {
-		height: 10px;
-		background: #2a2a2a;
-		border-radius: 999px;
-		overflow: hidden;
-	}
 
-	.fill {
-		height: 100%;
-		background: #3b82f6;
-		transition: width 0.15s linear;
-	}
 
 	button {
 		border: none;

@@ -11,6 +11,7 @@ export type ServiceBase = {
 
 export type ServiceFoodData =  ServiceBase & {
   type: TypeService
+  quantity: number
 }
 
 export type ServiceEnflatableData = ServiceBase & {
@@ -76,7 +77,7 @@ export class ServiceFood extends Service{
   public getTotalValue() : string {
     let priceBase = this.getPrice().getCent()
     console.log(priceBase)
-    console.log("quantitiy: ", this.quantity)
+    console.log("quantitiy current: ", this.quantity)
     let total = priceBase  * this.quantity
     console.log("total value: ", this.getPrice().toReal(total))
     console.log("total em centavos: ", total)
@@ -100,7 +101,8 @@ export class ServiceFood extends Service{
       id : this.id,
       name : this.name,
       priceCent : this.getPrice().toJson(),
-      type : this.type
+      type : this.type,
+      quantity: this.quantity
     }
   }
 
@@ -110,6 +112,7 @@ export class ServiceFood extends Service{
     service.id = data.id
     service.setPrice(data.priceCent.value) 
     service.type = data.type
+    service.quantity = data.quantity
 
     return service
 

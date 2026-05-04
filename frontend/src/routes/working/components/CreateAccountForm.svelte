@@ -61,7 +61,7 @@
 <style>
   section {
     position: absolute;
-    z-index: 1000;
+    z-index: 5;
     width: 100%;
     height: 100%;
     display: flex ;
@@ -69,11 +69,12 @@
     gap: .5rem;
     align-items: center;
     justify-content: center;
+    pointer-events: painted;
   }
 
 
   #containerClosed {
-    pointer-events: all;
+    pointer-events: painted;
     display: flex;
     width: 100%;
     justify-content: flex-end;

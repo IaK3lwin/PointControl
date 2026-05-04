@@ -4,7 +4,7 @@
   import FrameContainer from "../FrameContainer.svelte";
   import randomColor from "$lib/constants/colors";
   import WarnComponent from "../WarnComponent.svelte";
-  import { AccountStatus, type Account, type AccountData, type TypePayment } from "$lib/domain/accoun";
+  import { Account, AccountStatus, type AccountData, type TypePayment } from "$lib/domain/accoun";
   import { TypeService } from "$lib/domain/typeServices";
   import { serviceList } from "$lib/constants/srevices";
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services";
@@ -21,6 +21,8 @@
     updateAccount: (accountCurrent: Account) => void;
   } = $props();
 
+  let ServicesInAccount: (ServiceEnflatable | ServiceFood)[] = $derived(accountProps.service)
+
   const icons: Map<string, Map<string, string>> = new Map([
     ["closedMenu", new Map([
       ["pix", "https://i.postimg.cc/FzLkVXPn/pix36px.png"],
@@ -33,9 +35,6 @@
 
   let statusAccount: string = $derived(accountProps.status);
 
-  let serviceState: (ServiceEnflatable | ServiceFood)[] = $derived(
-    accountProps.service,
-  );
 
   let screenAddServiceShow: FrameContainer | null = $state(null);
   
@@ -55,23 +54,27 @@
 
   function AddSerivceInAccount(newService: ServiceEnflatable | ServiceFood) {
     console.log("service old : ", accountProps.service);
-    accountProps.addService(newService);
-    console.log("service new", accountProps.service);
+    accountProps.addService(newService) 
+    ServicesInAccount = [...accountProps.service] 
     updateAccount(accountProps);
   }
 
   function handleUpdateServices(
     serviceUpdated: ServiceEnflatable | ServiceFood,
   ) {
-    serviceState = serviceState.map((serviceCurrent) => {
+
+
+    accountProps.service.map((serviceCurrent) => {
       if (serviceCurrent.getId() == serviceUpdated.getId()) {
+          
         return serviceUpdated;
       }
       return serviceCurrent;
     });
+  
+    priceTotal = accountProps.calculateTotalPrice()
 
-    accountProps.service = serviceState;
-    updateAccount;
+    updateAccount(accountProps);
   }
 
   function handleClosedAccount() {
@@ -140,6 +143,15 @@
     {/each}
   {:else if typeServiceCurrent == TypeService.ENFLATABLE}
     <h2>Qual brinquedo:</h2>
+
+    {#each serviceList.get(TypeService.ENFLATABLE) as service}
+        <button
+          onclick={() => {
+            AddSerivceInAccount(service);
+        }}> <img src={service.getName() == 'pula-pula' ? 'https://i.postimg.cc/9MLms8kf/crepis24px.pnghttps://i.postimg.cc/MTh9qsSN/pulapuka.png' : service.getName() == ' escorregador' ? 'https://i.postimg.cc/yxnLm9ks/pipoca24px.pnghttps://i.postimg.cc/Y9pp8xZ1/escorrefador.png' : ''} alt=""> {service.getName()}</button
+      >
+      
+    {/each}
   {/if}
 </FrameContainer>
 
@@ -165,9 +177,9 @@
   <!-- Container dos serciços-->
   <section id="containerService" style:--random-color={randomColor("1")}>
     <span id="wrapperService">
-      {#each serviceState as service}
+      {#each ServicesInAccount as service}
         {#if service.type == TypeService.FOOD}
-          <ServiceFoodComponent service={service as ServiceFood} />
+          <ServiceFoodComponent service={service as ServiceFood} updateService={handleUpdateServices} />
         {:else}
           <ServiceEnflatableComponent
             service={service as ServiceEnflatable}

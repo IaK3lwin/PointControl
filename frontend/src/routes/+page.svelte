@@ -1,21 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import type { WorkDay } from "$lib/domain/workDay"
-    import { workDayTodayWritable } from "$lib/stores/workday.svelte";
+  import { workDayTodayWritable } from "$lib/stores/workday.svelte"
 
-  let raw: string | null = $state(null)
+  let workdayListString: string | null = $state(null)
   let currentDate : string | null = $state(null)
   let workDays: Map<string, WorkDay> = $state(new Map())
   let loading: boolean = $state(false)
 
   onMount(() => {
   
-    raw = localStorage.getItem('workdays');
+    workdayListString = localStorage.getItem('workdays');
     currentDate = new Date().toLocaleDateString('pt-BR')
-    console.log('raw: ', raw)
-    workDays = raw
-      ? new Map<string, WorkDay>(JSON.parse(raw))
-      : new Map()
+    console.log('workdayListString: ', workdayListString)
+    workDays = workdayListString
+                ? new Map<string, WorkDay>(JSON.parse(workdayListString))
+                : new Map()
   
   
     if (workDays.size <= 0 || !workDays.has(currentDate)) {
@@ -71,7 +71,9 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    h1 {
+
+    & h1 {
+      text-align: center;
       font-size: 1.6rem;
 
     }

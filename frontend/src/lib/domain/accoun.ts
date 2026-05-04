@@ -41,8 +41,8 @@ export class Account {
     this.service = []
   }
 
-  public addService(service: ServiceEnflatable | ServiceFood): void {
-    this.service.push(service)
+  public addService(newService: ServiceEnflatable | ServiceFood): void {
+    this.service = [...this.service, newService] 
   }
 
   public removeService(): void {
@@ -118,6 +118,25 @@ export class Account {
     this.price.setValue(total.getCent())
 
     return  this.price.toReal()
+  }
+
+  public calculateTotalPrice(): string {
+    let priceInitial: number = 0
+
+    this.service.forEach((service: ServiceEnflatable | ServiceFood) => {
+
+      if (service.type == TypeService.FOOD) {
+        const serviceConvert: ServiceFood = service as ServiceFood
+        priceInitial += serviceConvert.getPrice().getCent() * serviceConvert.getQuantity()
+        return
+      }
+      
+      priceInitial += service.getPrice().getCent()
+
+    })
+
+    this.price.setValue(priceInitial)
+    return this.price.toReal()
   }
 
 

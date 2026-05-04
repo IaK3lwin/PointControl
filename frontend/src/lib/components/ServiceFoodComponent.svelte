@@ -1,10 +1,11 @@
 <script lang="ts">
     import type { Cent } from "$lib/domain/cents";
-  import type { ServiceFood } from "$lib/domain/services"
+  import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services"
 
   let {
-    service
-  } : { service : ServiceFood} = $props()
+    service,
+    updateService
+  } : { service : ServiceFood, updateService: (serviceUpdated: ServiceFood | ServiceEnflatable) => void} = $props()
 
   // quais propriedades do service serão reativos?
   /**
@@ -15,7 +16,7 @@
 
    console.log("service food: ", service)
 
-   let quantity: number = $state(1)
+   let quantity: number = $derived(service.getQuantity())
    let priceView: string = $derived(service.getTotalValue())
 
 
@@ -23,14 +24,16 @@
    function handleAddQuantity() {
     console.log(service.getPrice())
     service.add()
+    updateService(service)
     quantity = service.getQuantity()
     priceView = service.getTotalValue()
     console.log(service.getPrice())
    }
 
-   function handleRemoceQuantity() {
+   function handleRemoveQuantity() {
     console.log(service.getPrice())
     service.remove()
+    updateService(service)
     quantity = service.getQuantity()
     priceView = service.getTotalValue()
     console.log(service.getPrice())
@@ -46,7 +49,7 @@
     <h2>Quantidade: {quantity}x</h2>
   </main>
   <footer>
-    <button onclick={handleRemoceQuantity} style="color: red;">-</button>
+    <button onclick={handleRemoveQuantity} style="color: red;">-</button>
     <p>{priceView}</p>
     <button onclick={handleAddQuantity} style="color: green;">+</button>
   </footer>
