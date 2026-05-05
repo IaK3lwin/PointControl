@@ -40,11 +40,11 @@ export class WorkDay {
 
   public static toDomain(data: WorkDayData): WorkDay {
     const accountIndayDomain: Account[] = data.accountsInDay.map((accountData) => {
-      console.log("workday to domain conver account to domain: ", accountData)
+      //console.log("workday to domain conver account to domain: ", accountData)
       return Account.toDomain(accountData)
     })
 
-    console.log("accountInDayDomain in Workday is: ", accountIndayDomain)
+    //console.log("accountInDayDomain in Workday is: ", accountIndayDomain)
 
 
     const workday: WorkDay = new WorkDay()
@@ -69,7 +69,7 @@ export function workDayFactory(): WorkDay{
   workday.status = 'undefined'
   workday.pait = false
 
-  console.log("created a new workday: " + workday.date + " is value is: ", workday)
+  //console.log("created a new workday: " + workday.date + " is value is: ", workday)
 
   return workday
 

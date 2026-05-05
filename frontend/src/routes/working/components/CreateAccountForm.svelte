@@ -8,7 +8,7 @@
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault()
 
-    console.log("funciona")
+    //console.log("funciona")
 
     const form: HTMLFormElement = event.currentTarget as HTMLFormElement
 
@@ -23,7 +23,7 @@
 
       const acccount: Account = accountFactory(data.get('name')?.toString() ?? "")
 
-      console.log("teste")
+      //console.log("teste")
       console.table(acccount)
 
       update(acccount)

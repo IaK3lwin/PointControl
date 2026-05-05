@@ -30,7 +30,7 @@ describe.skip('testing account', () => {
       throw new Error('error') 
     }
 
-    console.log("service: ", services)
+    //console.log("service: ", services)
 
     accountCompare.addService(services[0])
 

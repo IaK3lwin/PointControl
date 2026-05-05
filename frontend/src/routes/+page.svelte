@@ -12,15 +12,15 @@
   
     workdayListString = localStorage.getItem('workdays');
     currentDate = new Date().toLocaleDateString('pt-BR')
-    console.log('workdayListString: ', workdayListString)
+    //console.log('workdayListString: ', workdayListString)
     workDays = workdayListString
                 ? new Map<string, WorkDay>(JSON.parse(workdayListString))
                 : new Map()
   
   
     if (workDays.size <= 0 || !workDays.has(currentDate)) {
-      console.log("sem dias de trabalhos para hoje")
-      console.log(workDays.get(currentDate))
+      //console.log("sem dias de trabalhos para hoje")
+      //console.log(workDays.get(currentDate))
       loading = true
       return
     } 
@@ -28,8 +28,8 @@
     const possibleWorkday = workDays.get(currentDate)
 
     if (possibleWorkday) {
-      console.log("dia de trabalho existe")
-      console.log(possibleWorkday)
+      //console.log("dia de trabalho existe")
+      //console.log(possibleWorkday)
 
       $workDayTodayWritable =  possibleWorkday
       loading = true

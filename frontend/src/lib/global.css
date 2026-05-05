@@ -23,12 +23,12 @@ h1 {
 }
  .circleButton {
 
-  pointer-events: painted;
   all: unset;
   height: auto;
   width: auto;
   padding: .6rem;
-  z-index: 5;
+  z-index: 10;
+  pointer-events: all;
   
   
   font-size: .8rem;
@@ -41,4 +41,8 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.circleButton:hover {
+  cursor: pointer;
 }

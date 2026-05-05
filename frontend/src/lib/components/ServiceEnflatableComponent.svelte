@@ -31,11 +31,11 @@
 	
 	$effect(() => {
 		
-		console.log("effet codou");
+		//console.log("effet codou");
 		if (minselected) {
 			price = minselected;
 			service.setPrice(Cent.convertValueToCent(minselected));
-			console.log("price service: ", price)
+			//console.log("price service: ", price)
 		}
 
 		if (select != null) {
@@ -47,23 +47,32 @@
 			change(service)
 		}
 
-		console.log("tagname atualiza com valor de: ", tagName)
+		//console.log("tagname atualiza com valor de: ", tagName)
 		service.tag = tagName
-
-
-
 		
 	});
 
+
+	const idIntervalUpdateService = setInterval(() => {
+		if (minselected) {
+			change(service)
+		}
+	}, 1000)
+
+	onDestroy(() => {
+		//console.log("destruindo o setInterval do service: ", service.getName())
+		clearInterval(idIntervalUpdateService)
+	})
+
 	const time: Cronus = new Cronus();
 	function startTime() {
-		console.log("testando o Chorus");
+		//console.log("testando o Chorus");
 
 		time.setCallback(() => {
 			timeView = time.getHourFormat();
 			isRun = time.isRun();
 			if (time.getIsfinish()) {
-				console.log("time acabou o tempo")
+				//console.log("time acabou o tempo")
 				service.isFinish = time.getIsfinish()
 				isFinish = time.getIsfinish()
 				change(service)
@@ -71,12 +80,12 @@
 			
 		});
 
-		console.log("testando o valor do minseletec")
+		//console.log("testando o valor do minseletec")
 
 		if (minselected) {
-			console.log(minselected);
+			//console.log(minselected);
 			let valueClean = minselected.replace("R$", "").replace(",", ".");
-			console.log(valueClean);
+			//console.log(valueClean);
 			time.start(Number(valueClean), "m");
 			startTimeState = true
 		}

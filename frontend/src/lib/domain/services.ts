@@ -76,11 +76,11 @@ export class ServiceFood extends Service{
 
   public getTotalValue() : string {
     let priceBase = this.getPrice().getCent()
-    console.log(priceBase)
-    console.log("quantitiy current: ", this.quantity)
+    //console.log(priceBase)
+    //console.log("quantitiy current: ", this.quantity)
     let total = priceBase  * this.quantity
-    console.log("total value: ", this.getPrice().toReal(total))
-    console.log("total em centavos: ", total)
+    //console.log("total value: ", this.getPrice().toReal(total))
+    //console.log("total em centavos: ", total)
     return this.getPrice().toReal(total)
   }
 
@@ -107,7 +107,7 @@ export class ServiceFood extends Service{
   }
 
   public static toDomain(data: ServiceFoodData): ServiceFood {
-    console.log("todomain serice init: ", data)
+    //console.log("todomain serice init: ", data)
     const service: ServiceFood = new ServiceFood(data.name)
     service.id = data.id
     service.setPrice(data.priceCent.value) 
@@ -162,17 +162,17 @@ export class ServiceEnflatable extends Service{
     const service: ServiceEnflatable = new ServiceEnflatable(data.name)
     service.id = data.id
     if (data.priceCent) {
-      console.log("toDomain() log -> data.pricent found: ", data.priceCent )
+      //console.log("toDomain() log -> data.pricent found: ", data.priceCent )
       service.setPrice(data.priceCent.value)
     } else {
-      console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
+      //console.log("[Warning] -> Service.toDomain() log -> priceData is empty: ", data.priceCent)
       service.setPrice(0) 
     }
 
     service.type = data.type
     service.timeDuration = data.timeDuration
     service.isFinish = data.isFinish
-    console.log(`Service.toDomain() is finish! service with name ${service.getName()} : `, service)
+    //console.log(`Service.toDomain() is finish! service with name ${service.getName()} : `, service)
     return service
   }
 }

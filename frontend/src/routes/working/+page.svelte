@@ -23,6 +23,7 @@
 
   function showFormCreateAccount(event: Event) {
     event.preventDefault();
+    //console.log("apertado")
     showCreateAccountPopup = true;
   }
 
@@ -43,12 +44,12 @@
 
   function handleUpdateAccount(accountUpdated: Account): void {
 
-    console.log("account that is updates: ", accountUpdated)
+    //console.log("account that is updates: ", accountUpdated)
 
     accountsWritable.update((accountsInWritable) => {
       accountsInWritable.map((accountInMap) => {
-        console.log("Account current map : ", accountInMap)
-        console.log("accountUpdated id: ")
+        //console.log("Account current map : ", accountInMap)
+        //console.log("accountUpdated id: ")
         if (accountInMap.getId() == accountUpdated.getId()) {
           return accountUpdated
         }
@@ -61,7 +62,7 @@
 
     if (workday) {
       workday.accountsInDay = $accountsWritable
-      console.log(`workday updates with accountInday : `, workday)
+      //console.log(`workday updates with accountInday : `, workday)
       manager.saveWorkdays(workday);
     }
   }
@@ -70,7 +71,7 @@
 {#if showCreateAccountPopup}
   <CreateAccountForm
     closed={() => {
-      console.log("aaa")
+      //console.log("aaa")
       showCreateAccountPopup = false;
     }}
     update={handleSaveAccountInWorkday}
@@ -118,7 +119,7 @@
   }
 
   #containerAccount {
-    z-index: 2;
+    z-index: 0;
     width: 100%;
     height: 90%;
 
@@ -144,10 +145,9 @@
   }
 
   .containerButton {
-    pointer-events: painted;
     z-index: 1;
 
-    position: fixed;
+    position: absolute;
     height: 100vh;
     width: 100vw;
 
@@ -157,6 +157,8 @@
     flex-flow: column;
     justify-content: flex-end;
     align-items: flex-end;
+
+    pointer-events: none;
 
   } 
 

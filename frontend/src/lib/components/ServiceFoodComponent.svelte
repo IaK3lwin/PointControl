@@ -14,7 +14,7 @@
    *  
    */
 
-   console.log("service food: ", service)
+   //console.log("service food: ", service)
 
    let quantity: number = $derived(service.getQuantity())
    let priceView: string = $derived(service.getTotalValue())
@@ -22,21 +22,21 @@
 
    //handles
    function handleAddQuantity() {
-    console.log(service.getPrice())
+    //console.log(service.getPrice())
     service.add()
     updateService(service)
     quantity = service.getQuantity()
     priceView = service.getTotalValue()
-    console.log(service.getPrice())
+    //console.log(service.getPrice())
    }
 
    function handleRemoveQuantity() {
-    console.log(service.getPrice())
+    //console.log(service.getPrice())
     service.remove()
     updateService(service)
     quantity = service.getQuantity()
     priceView = service.getTotalValue()
-    console.log(service.getPrice())
+    //console.log(service.getPrice())
    }
 
 </script>

@@ -17,20 +17,20 @@ export class Manager {
     const workdaysMapData: Map<string, WorkDayData> = this.getWorkdayInLocalStorage()
 
     if (workdaysMapData.size == 0) {
-      console.log("workdays is null")
+      //console.log("workdays is null")
       this.workdayCurrent = workDayFactory()
     }
 
-    console.log("workdayInLocalStorage exist")
-    console.log("workdays load in localstorage  to data: ", workdaysMapData)
+    //console.log("workdayInLocalStorage exist")
+    //console.log("workdays load in localstorage  to data: ", workdaysMapData)
 
     if (workdaysMapData.has(dateCurrent)) {
-      console.log("workday find with key: ", dateCurrent)
+      //console.log("workday find with key: ", dateCurrent)
       let workdayCurrentData = workdaysMapData.get(dateCurrent)
-      console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
+      //console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
 
       if (workdayCurrentData) {
-        console.log(workdayCurrentData, "transforming in intance class WorkDay")
+        //console.log(workdayCurrentData, "transforming in intance class WorkDay")
         this.transformWorkdayDataInDomain(workdayCurrentData)
       }
     }
@@ -56,8 +56,8 @@ export class Manager {
   private transformWorkdayDataInDomain(workdayCurrentData: WorkDayData): void {
 
     const workdayIntance: WorkDay = WorkDay.toDomain(workdayCurrentData)
-    console.log("accounts in worlday cosntructor")
-    console.log(workdayCurrentData?.accountsInDay)
+    //console.log("accounts in worlday cosntructor")
+    //console.log(workdayCurrentData?.accountsInDay)
     this.workdayCurrent = workdayIntance
 
   }
@@ -96,17 +96,17 @@ export class Manager {
     
 
     if (workDayInLocalStorage.size == 0) {
-      console.log("work day não existe")
+      //console.log("work day não existe")
       const workdayTemp: Map<string, WorkDayData> = new Map()
 
       workdayTemp.set(date, newWorkday.toJson())
       this.saveWorkdayInLocalStorage(workdayTemp)
-      console.log(localStorage.getItem('workdays'))
+      //console.log(localStorage.getItem('workdays'))
       return
     }
 
-    console.log("manager / saveWorkDATA: state work in runtime")
-    console.log(newWorkday.toJson())
+    //console.log("manager / saveWorkDATA: state work in runtime")
+    //console.log(newWorkday.toJson())
     workDayInLocalStorage.set(date, newWorkday.toJson())
 
     this.saveWorkdayInLocalStorage(workDayInLocalStorage)

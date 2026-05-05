@@ -10,6 +10,7 @@
   import type { ServiceEnflatable, ServiceFood } from "$lib/domain/services";
   import ServiceFoodComponent from "../ServiceFoodComponent.svelte";
   import ServiceEnflatableComponent from "../ServiceEnflatableComponent.svelte";
+    import { Cent } from "$lib/domain/cents";
 
   let {
     accountProps,
@@ -35,6 +36,8 @@
 
   let statusAccount: string = $derived(accountProps.status);
 
+  let MoneyReceived: string = $state("")
+  let trocoPreview: string = $state("")
 
   let screenAddServiceShow: FrameContainer | null = $state(null);
   
@@ -53,7 +56,7 @@
   let typePaymentCurrent: TypePayment = $state(null)
 
   function AddSerivceInAccount(newService: ServiceEnflatable | ServiceFood) {
-    console.log("service old : ", accountProps.service);
+    //console.log("service old : ", accountProps.service);
     accountProps.addService(newService) 
     ServicesInAccount = [...accountProps.service] 
     updateAccount(accountProps);
@@ -85,6 +88,28 @@
     accountProps.status = AccountStatus.CLOSED
     updateAccount(accountProps)
   }
+
+  let priceReceived: Cent
+  let priceTotalCent: Cent = $derived(new Cent(Cent.convertValueToCent(priceTotal)))
+
+  $effect(() => {
+    priceReceived = new Cent(Cent.convertValueToCent(MoneyReceived))
+    console.log("priceReceiv: ", priceReceived)
+    try {
+      const transshipmentCent: Cent | null = priceTotalCent.calculateTransshipment(priceReceived)
+  
+      if (!transshipmentCent) {
+        trocoPreview = "Sem troco"
+        return
+      }
+  
+      trocoPreview = transshipmentCent.toReal() 
+      
+    } catch {
+      trocoPreview = "valor de troco inválido"
+    }
+
+  })
 </script>
 
 <FrameContainer bind:this={screenClosedAccountShow}>
@@ -100,9 +125,13 @@
 
     {#if typePaymentCurrent}
       {#if typePaymentCurrent == 'monay'}
-        <h2>Troco?</h2> 
-        <input type="text" placeholder="Valor entregue">
-        <p>Troco a entregar: <strong>[valor ficará aqui]</strong></p>
+
+        <span class="containerTroco">
+          <h2>Troco?</h2>
+          <input type="text" inputmode="numeric" placeholder="Valor entregue" bind:value={MoneyReceived}>
+          <p>Troco a entregar: <strong>{trocoPreview}</strong></p>
+        </span>
+
       {/if} 
 
       <button onclick={handleClosedAccount}>Fechar conta</button>
@@ -214,4 +243,5 @@
       <p>adicionar</p>
     </button>
   </header>
+
 </article>

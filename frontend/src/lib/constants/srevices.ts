@@ -28,4 +28,4 @@ export const serviceList: Map<TypeService, (ServiceFood | ServiceEnflatable)[]> 
 ]);
 
 
-console.log("[LOGGER] constantes done to use: ", serviceList)
+//console.log("[LOGGER] constantes done to use: ", serviceList)
