@@ -49,7 +49,7 @@
     <span>
 
       <a href="/working">sim</a>
-      <a href="/await">não</a>
+      <a href="/dashboard">não</a>
       
     </span>
 

@@ -1,11 +1,14 @@
 import { WorkDay, workDayFactory, type WorkDayData } from "./workDay";
 import { browser } from "$app/environment";
+import { WorkDayCollection } from "./WorkDayCollection";
 
 export class Manager {
 
   private workdayCurrent: WorkDay | null = null
 
   private static instanciate: Manager | null = null
+
+  private workdayCollection: WorkDayCollection | null = null
 
   private constructor() {
     if (!browser) {
@@ -15,6 +18,8 @@ export class Manager {
     const dateCurrent: string = new Date().toLocaleDateString('pt-BR')
 
     const workdaysMapData: Map<string, WorkDayData> = this.getWorkdayInLocalStorage()
+
+    
 
     if (workdaysMapData.size == 0) {
       //console.log("workdays is null")
@@ -34,9 +39,9 @@ export class Manager {
         this.transformWorkdayDataInDomain(workdayCurrentData)
       }
     }
-    else {
-      this.workdayCurrent = workDayFactory()
-    }
+
+    this.workdayCollection = new WorkDayCollection(workdaysMapData) 
+    
   }
 
   private getWorkdayInLocalStorage(): Map<string, WorkDayData> {
@@ -82,6 +87,17 @@ export class Manager {
 
     throw new Error('Workday dont faund')
 
+  }
+
+  public getWorkDayCollection(): WorkDayCollection {
+    if (!browser) {
+      throw new Error("Impossível usar esse método fora do navegador!")
+    }
+    if (this.workdayCollection) {
+      return this.workdayCollection
+    }
+
+    throw new Error("WorkdayCollection não foi iniciado!")
   }
 
 
