@@ -79,7 +79,7 @@
 {/if}
 
 <section id="container">
-  <h1 style:--random-color={randomColor("1")}>contas</h1>
+  <h1 style:--random-color={randomColor("1")}>Pedidos</h1>
 
   <div id="containerAccount">
     <span id="accountWrapper">
