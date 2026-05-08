@@ -1,6 +1,7 @@
 import { WorkDay, workDayFactory, type WorkDayData } from "./workDay";
 import { browser } from "$app/environment";
 import { WorkDayCollection } from "./WorkDayCollection";
+import type { Cent } from "./cents";
 
 export class Manager {
 

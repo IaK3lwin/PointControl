@@ -96,6 +96,12 @@ export class WorkDayCollection {
     return new WorkDayCollection(newWorkdayCollection)
   }
 
+  public forEach(callback: (key ?: string, workday ?: WorkDay) => void): void {
+    this.listWorkdays.forEach((workdayCurrent, key) => {
+      callback(key, workdayCurrent)
+    })
+  }
+
   public pullFirst(): WorkDay | null{
     console.log("listWorkday in class: ", this.listWorkdays) 
     let workday  = this.listWorkdays.entries().next().value
@@ -108,4 +114,34 @@ export class WorkDayCollection {
 
     return workday[1]
   }
+
+  public joinWorkdayCollection(currentWorkdayCollection: WorkDayCollection): void {
+    this.listWorkdays.forEach((workday, key) => {
+      const workdayCurrent = currentWorkdayCollection.get(key)
+      if (!workdayCurrent) {
+        return
+      }
+
+      if (workday.id == workdayCurrent.id) {
+        this.listWorkdays.set(key, workdayCurrent)
+      }
+
+    })
+  }
+
+  public size(): number {
+    return this.listWorkdays.size
+  }
+
+
+  public toData(): Map<string, WorkDayData> {
+    const listworkdayData: Map<string, WorkDayData> = new Map()
+    this.listWorkdays.forEach((workDay, key) => {
+      listworkdayData.set(key, workDay.toJson())
+    })
+
+    return listworkdayData
+  }
+
+
 }

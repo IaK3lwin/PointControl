@@ -1,7 +1,7 @@
 import { browser } from "$app/environment";
 import { Cent } from "./cents";
-import type { WorkDayData } from "./workDay";
-import type { WorkDayCollection } from "./WorkDayCollection";
+import type { WorkDay, WorkDayData } from "./workDay";
+import { WorkDayCollection } from "./WorkDayCollection";
 
 type PaymentManagerData = {
   amountToPay: number
@@ -70,5 +70,29 @@ export class PaymentManager {
     }
 
   }
+
+  public setPayment(value: Cent): void {
+    //TODO: finish implementation to payment
+    if (!this.workdayCollection) {
+      return
+    }
+
+    const workdaysPaymentDone: Map<string, WorkDay> = new Map()
+
+    this.workdayCollection.forEach((key, workdayInCollection) => {
+            
+    }) 
+
+  }
+
+  public getWorkdayUpdated(): WorkDayCollection | null{
+
+    if (this.workdayCollection) {
+      return this.workdayCollection
+    }
+
+    return null
+  }
+  
 
 }
