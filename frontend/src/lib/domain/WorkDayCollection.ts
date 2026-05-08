@@ -40,10 +40,41 @@ export class WorkDayCollection {
 
   }
 
-  public filterAfterDate(date: Date): WorkDayCollection {
+  /**
+   * 
+   * @param dateParam 
+   * @returns WorkdayCollection 
+   * @description this method cant logic error
+   */
+  public filterAfterDate(dateParam: Date): WorkDayCollection {
     //TODO: finish to write implementation this method  
-    return this.filter((key, value) => {
-      return true
+    
+    return this.filter((key) => {
+      if (key) {
+        const workdayDate: Date = new Date(key)
+        if (workdayDate.getDate() > dateParam.getDate()) {
+          return true
+        }
+      } 
+      return false
+    })
+  }
+
+  /**
+   * 
+   * @param dateParam 
+   * @returns WorkdayCollection 
+   * @description this method cant logic error
+   */
+  public filterBeforeDate(dateParam: Date): WorkDayCollection {
+    return this.filter((key) => {
+      if (key) {
+        const dateWorkday: Date = new Date(key)
+        if (dateWorkday.getDate() < dateParam.getDate()) {
+          return true
+        }
+      }
+      return false
     })
   }
    
