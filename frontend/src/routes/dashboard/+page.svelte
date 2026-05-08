@@ -4,7 +4,12 @@
   import type { WorkDayCollection } from "$lib/domain/WorkDayCollection"
 
   const manager: Manager = Manager.get()
-  
+  try {
+
+
+  } catch(e) {
+
+  }
     
 </script>
 

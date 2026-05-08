@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { WorkDay, type WorkDayData } from "./workDay";
 
 
@@ -5,6 +6,9 @@ export class WorkDayCollection {
   private listWorkdays: Map<string, WorkDay> = new Map()
 
   constructor(listWorkday: Map<string, WorkDayData | WorkDay>) {
+    if (!browser) {
+      return
+    }
     listWorkday.forEach((workdayCurrent, keyCUrrent) => {
 
       if (workdayCurrent instanceof WorkDay) {
@@ -90,5 +94,18 @@ export class WorkDayCollection {
     })
     
     return new WorkDayCollection(newWorkdayCollection)
+  }
+
+  public pullFirst(): WorkDay | null{
+    console.log("listWorkday in class: ", this.listWorkdays) 
+    let workday  = this.listWorkdays.entries().next().value
+    console.log("first element is  : ", workday)
+    if (!workday) {
+      return null
+    }
+
+    this.listWorkdays.delete(workday[0])
+
+    return workday[1]
   }
 }
