@@ -71,18 +71,46 @@ export class PaymentManager {
 
   }
 
-  public setPayment(value: Cent): void {
+  public setPayment(wage: Cent): void {
     //TODO: finish implementation to payment
     if (!this.workdayCollection) {
       return
     }
 
     const workdaysPaymentDone: Map<string, WorkDay> = new Map()
+    const datePait: string = new Date().toLocaleDateString('pt-BR')
+    console.log("workdayCollection after set payment",this.workdayCollection)
 
     this.workdayCollection.forEach((key, workdayInCollection) => {
-            
+      //logic to discount to price
+      if (!workdayInCollection || !key) {
+       return 
+      }
+
+      if (workdayInCollection.amountToPaid.toCent() == 0) {
+        return
+      }
+
+      console.log(`workday with data: ${workdayInCollection.date} amountToPay: ${workdayInCollection.amountToPaid.toReal()}`)
+
+      workdayInCollection.amountToPaid.subtractValue(wage.getCent())
+
+      if (workdayInCollection.amountToPaid.getCent() <= 0 ) {
+        wage = new Cent(Math.abs(workdayInCollection.amountToPaid.getCent())) 
+        workdayInCollection.amountToPaid.setValue(0)
+        workdayInCollection.pait = true 
+        workdayInCollection.paitAt = datePait
+        workdayInCollection.status = 'pait'
+      }
+
+      console.log(`workday with data: ${workdayInCollection.date} amountToPay after to paymetn: ${workdayInCollection.amountToPaid.toReal()}`)
+      
+      workdaysPaymentDone.set(key, workdayInCollection)
+      
     }) 
 
+    this.workdayCollection.joinWorkdayCollection(new WorkDayCollection(workdaysPaymentDone))
+    console.log("workdayCollection before set payment",this.workdayCollection)
   }
 
   public getWorkdayUpdated(): WorkDayCollection | null{

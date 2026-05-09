@@ -1,7 +1,16 @@
 import {Account, type AccountData} from "./accoun"
 import {v4 as uuid} from "uuid"
+import { Cent, type CentData } from "./cents"
 
-export type StatusWorkDay = 'working' | 'planned' | 'finish' | 'undefined'
+export type StatusWorkDay = 'working' | 'planned' | 'finish' | 'pait' |  'undefined'
+
+type DaylyRateValues = {
+  50 : Cent
+}
+
+export const daylyRatesValues: DaylyRateValues = {
+  50 : new Cent(Cent.convertValueToCent("50,00"))
+}
 
 export type WorkDayData = {
  id: string
@@ -11,9 +20,12 @@ export type WorkDayData = {
    pait: boolean
    paitAt: string 
    accountsInDay: AccountData[]
+   amountToPaid: CentData
+   dailyPayment: CentData
 }
 
 export class WorkDay {
+
   public id: string = ""
   public date : string = ""
   public status: StatusWorkDay = 'undefined'
@@ -21,6 +33,9 @@ export class WorkDay {
   public pait: boolean = false
   public paitAt: string = ""
   public accountsInDay: Account[] = []
+
+  public dailyPayment: Cent  = daylyRatesValues[50]
+  public amountToPaid: Cent = this.dailyPayment
 
   
 
@@ -34,11 +49,15 @@ export class WorkDay {
       paitAt : this.paitAt,
       accountsInDay : this.accountsInDay.map((accout) => {
         return accout.toJson()
-      })
+      }),
+      amountToPaid : this.amountToPaid.toJson(),
+      dailyPayment : this.dailyPayment.toJson()
+
     }
   }
 
   public static toDomain(data: WorkDayData): WorkDay {
+
     const accountIndayDomain: Account[] = data.accountsInDay.map((accountData) => {
       //console.log("workday to domain conver account to domain: ", accountData)
       return Account.toDomain(accountData)
@@ -55,6 +74,9 @@ export class WorkDay {
     workday.pait = data.pait
     workday.paitAt = data.paitAt
     workday.accountsInDay = accountIndayDomain 
+    workday.dailyPayment = Cent.toDomain(data.dailyPayment)
+    workday.amountToPaid = Cent.toDomain(data.amountToPaid)
+
     return workday
   }
 
