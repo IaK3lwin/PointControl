@@ -6,7 +6,7 @@ import { TypeService } from "$lib/domain/typeServices"
 import { test, expect, describe } from "vitest"
 import { serviceList } from "$lib/constants/srevices"
 
-describe.skip('testing account', () => {
+describe.skip.skip('testing account', () => {
 
   const accountCompare: Account = accountFactory('test')
 

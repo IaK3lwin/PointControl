@@ -5,11 +5,11 @@ import { Cent, type CentData } from "./cents"
 export type StatusWorkDay = 'working' | 'planned' | 'finish' | 'pait' |  'undefined'
 
 type DaylyRateValues = {
-  50 : Cent
+  50 : number
 }
 
 export const daylyRatesValues: DaylyRateValues = {
-  50 : new Cent(Cent.convertValueToCent("50,00"))
+  50 : Cent.convertValueToCent("50,00")
 }
 
 export type WorkDayData = {
@@ -34,10 +34,12 @@ export class WorkDay {
   public paitAt: string = ""
   public accountsInDay: Account[] = []
 
-  public dailyPayment: Cent  = daylyRatesValues[50]
+  public dailyPayment: Cent  = new Cent(daylyRatesValues[50])
   public amountToPaid: Cent = this.dailyPayment
 
-  
+  public setAmountToPaid(value: number) {
+    this.amountToPaid.setValue(value)
+  }
 
   public toJson() : WorkDayData {
     return {

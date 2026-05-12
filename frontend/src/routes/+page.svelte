@@ -2,30 +2,17 @@
   import { onMount } from "svelte"
   import type { WorkDay } from "$lib/domain/workDay"
   import { workDayTodayWritable } from "$lib/stores/workday.svelte"
+    import { Manager } from "$lib/domain/manager";
 
-  let workdayListString: string | null = $state(null)
   let currentDate : string | null = $state(null)
   let workDays: Map<string, WorkDay> = $state(new Map())
   let loading: boolean = $state(false)
+  const manager: Manager = Manager.get()  
 
   onMount(() => {
-  
-    workdayListString = localStorage.getItem('workdays');
-    currentDate = new Date().toLocaleDateString('pt-BR')
-    //console.log('workdayListString: ', workdayListString)
-    workDays = workdayListString
-                ? new Map<string, WorkDay>(JSON.parse(workdayListString))
-                : new Map()
-  
-  
-    if (workDays.size <= 0 || !workDays.has(currentDate)) {
-      //console.log("sem dias de trabalhos para hoje")
-      //console.log(workDays.get(currentDate))
-      loading = true
-      return
-    } 
-    
-    const possibleWorkday = workDays.get(currentDate)
+    try {
+
+    const possibleWorkday = manager.getWorkDay()
 
     if (possibleWorkday) {
       //console.log("dia de trabalho existe")
@@ -36,6 +23,10 @@
     } else {
       loading = false 
     }
+  } catch(e) {
+    console.log("workday Not found")
+    loading = true
+  }
   })
   
 </script>
