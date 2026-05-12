@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+.container {
+
+  width: 100%;
+  min-height: 100%;
+
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1rem;
+
+  padding: 1rem;
+}
+
+.wrapper {
+
+}

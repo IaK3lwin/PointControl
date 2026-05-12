@@ -90,15 +90,16 @@ export class Manager {
 
   }
 
-  public getWorkDayCollection(): WorkDayCollection {
+  public getWorkDayCollection(): WorkDayCollection | null {
     if (!browser) {
-      throw new Error("Impossível usar esse método fora do navegador!")
+      return null
     }
     if (this.workdayCollection) {
       return this.workdayCollection
     }
 
-    throw new Error("WorkdayCollection não foi iniciado!")
+    return null
+
   }
 
 

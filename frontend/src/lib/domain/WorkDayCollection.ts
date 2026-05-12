@@ -3,10 +3,12 @@ import { WorkDay, type WorkDayData } from "./workDay";
 
 
 
-export class WorkDayCollection {
+export class WorkDayCollection implements Iterable<WorkDay>{
+
   private listWorkdays: Map<string, WorkDay> = new Map()
 
   constructor(listWorkday: Map<string, WorkDayData | WorkDay>) {
+
     if (!browser && process.env.ENVIRONMENT_TEST != 'true') {
       return
     }
@@ -19,7 +21,12 @@ export class WorkDayCollection {
       }
 
     })
+
   }
+
+  *[Symbol.iterator]() : IterableIterator<WorkDay> {
+    yield* this.listWorkdays.values()
+  } 
 
   public get(key: string): WorkDay | null {
     const workday: WorkDay | undefined = this.listWorkdays.get(key)
