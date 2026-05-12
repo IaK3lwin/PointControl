@@ -35,7 +35,7 @@ export class WorkDay {
   public accountsInDay: Account[] = []
 
   public dailyPayment: Cent  = new Cent(daylyRatesValues[50])
-  public amountToPaid: Cent = this.dailyPayment
+  public amountToPaid: Cent = new Cent(daylyRatesValues[50])
 
   public setAmountToPaid(value: number) {
     this.amountToPaid.setValue(value)

@@ -91,6 +91,7 @@ export class PaymentManager {
       }
 
       if (moneyToDiscountTheAmount.getCent() == 0) {
+        mapPaymentVerify.set(key, workdayNotPaidCurrent)
         return
       }
 
@@ -108,10 +109,10 @@ export class PaymentManager {
         amountToPaymentCent -= moneyRemainingCent
         moneyRemainingCent = 0
       }
-
+      
       moneyToDiscountTheAmount.setValue(moneyRemainingCent) 
       workdayNotPaidCurrent.amountToPaid.setValue(amountToPaymentCent)
-
+      
       workdayNotPaidCurrent = this.updateWorkday(workdayNotPaidCurrent, datePaid)
 
       mapPaymentVerify.set(key, workdayNotPaidCurrent)

@@ -33,8 +33,8 @@ describe('Testing payment class...', () => {
     console.table(workday)
   })
 
-  test("testion setPayment", () => {
-    const paymentManager = new PaymentManager(workdayCollections)
+  const paymentManager = new PaymentManager(workdayCollections)
+  test("testing setPayment with wage 40,00", () => {
 
     const wage = new Cent(Cent.convertValueToCent("40,00"))
     const workdayCollectionUpdatedPayment = paymentManager.setPayment(wage)
@@ -44,6 +44,32 @@ describe('Testing payment class...', () => {
     workdayCollections.forEach((key, workday) => {
       console.table(workday)
     })
+
+  })
+
+  test('testing setPayment with value: 40,00 reais', () => {
+    console.log("new wage, 40,00")
+    const wage: Cent = new Cent(Cent.convertValueToCent("40,00"))
+
+    const workdayCollectionUpdatePayment= paymentManager.setPayment(wage)
+    workdayCollections.updateValuesWorkdayCollection(workdayCollectionUpdatePayment)
+
+    workdayCollectionUpdatePayment.forEach((key, workday) => {
+      console.log("depois do segund pagamento")
+      console.log(workday)
+    })
+    const firstWorkday = workdayCollectionUpdatePayment.pullFirst()
+    const secondWorkday = workdayCollectionUpdatePayment.pullFirst()
+    console.log("primeiro dia: ", firstWorkday)
+    console.log("segundo dia: ", secondWorkday)
+
+    if (!firstWorkday ||!secondWorkday) {
+      return
+    }
+
+
+    expect(firstWorkday.pait == true)
+
 
   })
   
