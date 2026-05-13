@@ -18,7 +18,9 @@ export class PaymentManager {
   private amountToPay: Cent = new Cent()
   private amountReceived: Cent = new Cent()
 
-
+  public getStatisticsNeedToBePai(): Cent[] {
+    return [this.amountToPay, this.amountReceived] 
+  }
 
   public constructor(workdayCollection: WorkDayCollection) {
     this.workdayCollection = workdayCollection;

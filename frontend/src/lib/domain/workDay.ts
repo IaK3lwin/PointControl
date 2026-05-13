@@ -2,7 +2,7 @@ import {Account, type AccountData} from "./accoun"
 import {v4 as uuid} from "uuid"
 import { Cent, type CentData } from "./cents"
 
-export type StatusWorkDay = 'working' | 'planned' | 'finish' | 'pait' |  'undefined'
+export type StatusWorkDay = 'working' | 'planned'  | 'pait' |  'undefined'
 
 type DaylyRateValues = {
   50 : number

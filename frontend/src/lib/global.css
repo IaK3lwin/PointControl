@@ -4,12 +4,19 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Sekuya&display=swap');
 
+:root {
+  --background-primary: #E8F5BD;
+  --background-secundary: #5B7E3C;
+  --text-color: #C44545;
+  --emphasis-color: #A2CB8B;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Arimo';
+  background-color: vr(--background-primary);
 }
 
 h1 {
@@ -46,3 +53,4 @@ h1 {
 .circleButton:hover {
   cursor: pointer;
 }
+
