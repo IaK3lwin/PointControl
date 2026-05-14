@@ -9,9 +9,9 @@
   import { writable, type Writable } from "svelte/store";
   import { workDayTodayWritable } from "$lib/stores/workday.svelte";
   import { EarIcon, LucideMenu } from "@lucide/svelte";
-  import WorkdayPaid from "$lib/components/WorkdayPaid.svelte";
   import { returnWorkdayPaitTrue } from "./scripts/returnWorkdayPaitTrue";
-    import FrameContainer from "$lib/components/FrameContainer.svelte";
+  import FrameContainer from "$lib/components/FrameContainer.svelte";
+  import WorkdayPaid from "$lib/components/WorkdayPaid.svelte";
 
   const manager: Manager = Manager.get();
 
