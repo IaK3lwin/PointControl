@@ -15,6 +15,8 @@ export class Manager {
     if (!browser) {
       return
     }
+    console.log("rodando construtor do manager")
+
 
     const dateCurrent: string = new Date().toLocaleDateString('pt-BR')
 
@@ -23,22 +25,26 @@ export class Manager {
     
 
     if (workdaysMapData.size == 0) {
-      //console.log("workdays is null")
+      console.log("workdays is null")
       this.workdayCurrent = workDayFactory()
     }
 
-    //console.log("workdayInLocalStorage exist")
-    //console.log("workdays load in localstorage  to data: ", workdaysMapData)
+    console.log("workdayInLocalStorage exist")
+    console.log("workdays load in localstorage  to data: ", workdaysMapData)
 
     if (workdaysMapData.has(dateCurrent)) {
-      //console.log("workday find with key: ", dateCurrent)
+      console.log("workday find with key: ", dateCurrent)
       let workdayCurrentData = workdaysMapData.get(dateCurrent)
-      //console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
+      console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
 
       if (workdayCurrentData) {
-        //console.log(workdayCurrentData, "transforming in intance class WorkDay")
+        console.log(workdayCurrentData, "transforming in intance class WorkDay")
         this.transformWorkdayDataInDomain(workdayCurrentData)
       }
+    }
+    else {
+      console.log("não existe workday referente a este dia")
+      this.workdayCurrent = workDayFactory()
     }
 
     this.workdayCollection = new WorkDayCollection(workdaysMapData) 
@@ -62,8 +68,8 @@ export class Manager {
   private transformWorkdayDataInDomain(workdayCurrentData: WorkDayData): void {
 
     const workdayIntance: WorkDay = WorkDay.toDomain(workdayCurrentData)
-    //console.log("accounts in worlday cosntructor")
-    //console.log(workdayCurrentData?.accountsInDay)
+    console.log("accounts in worlday cosntructor")
+    console.log(workdayCurrentData?.accountsInDay)
     this.workdayCurrent = workdayIntance
 
   }
@@ -80,13 +86,13 @@ export class Manager {
   }
 
 
-  public getWorkDay(): WorkDay {
+  public getWorkDay(): WorkDay | null{
 
     if (this.workdayCurrent) {
       return this.workdayCurrent
     }
 
-    throw new Error('Workday dont faund')
+    return null
 
   }
 

@@ -79,6 +79,9 @@
     if (!valueSetPayment) return 
 
     console.log("este é o valor: ", valueSetPayment)
+    const newWage: Cent = new Cent(Cent.convertValueToCent(valueSetPayment))
+    const workdayCollectionPaymentUpdated = paymentManager.setPayment(newWage)
+    updateWorkdayCollection(workdayCollectionPaymentUpdated)
   }
 </script>
 

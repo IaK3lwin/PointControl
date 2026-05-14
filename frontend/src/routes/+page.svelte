@@ -4,29 +4,21 @@
   import { workDayTodayWritable } from "$lib/stores/workday.svelte"
     import { Manager } from "$lib/domain/manager";
 
-  let currentDate : string | null = $state(null)
-  let workDays: Map<string, WorkDay> = $state(new Map())
-  let loading: boolean = $state(false)
-  const manager: Manager = Manager.get()  
-
-  onMount(() => {
-    try {
-
-    const possibleWorkday = manager.getWorkDay()
+    let currentDate : string | null = $state(null)
+    let loading: boolean = $state(false)
+    
+    onMount(() => {
+      const manager: Manager = Manager.get()  
+      const possibleWorkday = manager.getWorkDay()
 
     if (possibleWorkday) {
-      //console.log("dia de trabalho existe")
-      //console.log(possibleWorkday)
 
       $workDayTodayWritable =  possibleWorkday
       loading = true
     } else {
-      loading = false 
+      loading = false
+      console.log("não encontrado workday")
     }
-  } catch(e) {
-    console.log("workday Not found")
-    loading = true
-  }
   })
   
 </script>

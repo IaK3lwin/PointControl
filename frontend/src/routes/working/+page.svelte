@@ -11,12 +11,14 @@
   import { browser } from "$app/environment"
   import { CopyPlus } from "@lucide/svelte"
 
-  const manager: Manager = Manager.get();
+  let manager: Manager  = Manager.get();
   let workday: WorkDay | null = null;
 
   if (browser) {
     workday = manager.getWorkDay();
-    accountsWritable.set(workday.accountsInDay);
+    if (workday) {
+      accountsWritable.set(workday.accountsInDay);
+    }
   }
 
   let showCreateAccountPopup: boolean = $state(false);
@@ -37,9 +39,12 @@
       accounts.push(newAccount);
       return accounts;
     });
+
     workday.accountsInDay = $accountsWritable;
 
-    manager.saveWorkdays(workday);
+    if (manager) {
+      manager.saveWorkdays(workday);
+    }
   }
 
   function handleUpdateAccount(accountUpdated: Account): void {
