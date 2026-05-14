@@ -58,6 +58,7 @@
 
 <style>
   article {
+    min-width: 60%;
     min-height: auto;
     display: flex;
     flex-flow: column;

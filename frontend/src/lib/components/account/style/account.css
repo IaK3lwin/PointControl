@@ -1,6 +1,6 @@
 article {
-  min-height: 90%;
-  max-width: 95%;
+  min-height: 95%;
+  min-width: 90vw;
   border-radius: 0.5rem;
   border: 1px solid black;
   background-color: var(--random-color);
