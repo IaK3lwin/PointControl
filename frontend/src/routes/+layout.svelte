@@ -12,9 +12,10 @@
 	<title>PointControl</title>
 </svelte:head>
 
-
+<main>
 	<Header />
 	{@render children()}
+</main>
 
 
 <style>

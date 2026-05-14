@@ -35,6 +35,8 @@
       return;
     }
 
+    workday.status = 'working'
+
     accountsWritable.update((accounts) => {
       accounts.push(newAccount);
       return accounts;
@@ -112,7 +114,7 @@
 <style>
   #container {
     width: 100%;
-    max-width: 100vh;
+    min-height: 80%;
     display: flex;
     flex-flow: column;
     gap: 1rem;
@@ -132,7 +134,7 @@
     padding: 0 0.5rem 0 0.5rem;
 
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 

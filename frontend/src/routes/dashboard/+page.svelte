@@ -120,7 +120,9 @@
         Todos
       </button>
     </section>
+
     <hr />
+
     <section class="wrapper">
       {#if $workdaysCollectionReactive}
         {#each $workdaysCollectionReactive as workday}

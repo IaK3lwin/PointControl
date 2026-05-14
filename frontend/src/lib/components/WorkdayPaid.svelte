@@ -87,6 +87,10 @@
     border-radius: .5rem;
   }
 
+  #icon {
+    min-width: 6rem;
+  }
+
   #amountToPay {
     padding: .5rem;
     border-radius: .5rem;

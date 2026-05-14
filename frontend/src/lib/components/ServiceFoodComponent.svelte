@@ -58,6 +58,7 @@
 
 <style>
   article {
+    min-height: auto;
     display: flex;
     flex-flow: column;
     gap: .5rem;
@@ -65,6 +66,7 @@
     border-radius: .5rem;
     padding: .5rem;
     margin: .5rem 0;
+
   }
 
   header {
