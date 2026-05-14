@@ -12,17 +12,16 @@
 	<title>PointControl</title>
 </svelte:head>
 
-<main>
 
 	<Header />
 	{@render children()}
 
-</main>
 
 <style>
 	main {
 		display: flex;
 		flex-flow:column nowrap;
+		width: 100%;
 		height: 100vh;
 	}
 </style>

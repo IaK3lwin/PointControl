@@ -112,11 +112,12 @@
 <style>
   #container {
     width: 100%;
-    height: 100%;
-
+    max-width: 100vh;
     display: flex;
     flex-flow: column;
+    gap: 1rem;
     justify-items: center;
+    
   }
 
   h1 {
