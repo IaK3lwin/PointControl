@@ -15,7 +15,6 @@ export class Manager {
     if (!browser) {
       return
     }
-    console.log("rodando construtor do manager")
 
 
     const dateCurrent: string = new Date().toLocaleDateString('pt-BR')
@@ -25,25 +24,18 @@ export class Manager {
     
 
     if (workdaysMapData.size == 0) {
-      console.log("workdays is null")
       this.workdayCurrent = workDayFactory()
     }
 
-    console.log("workdayInLocalStorage exist")
-    console.log("workdays load in localstorage  to data: ", workdaysMapData)
 
     if (workdaysMapData.has(dateCurrent)) {
-      console.log("workday find with key: ", dateCurrent)
       let workdayCurrentData = workdaysMapData.get(dateCurrent)
-      console.log("logging workdayDATA IN LOCALSTORAGE: ", workdayCurrentData)
 
       if (workdayCurrentData) {
-        console.log(workdayCurrentData, "transforming in intance class WorkDay")
         this.transformWorkdayDataInDomain(workdayCurrentData)
       }
     }
     else {
-      console.log("não existe workday referente a este dia")
       this.workdayCurrent = workDayFactory()
     }
 
@@ -66,12 +58,8 @@ export class Manager {
   }
 
   private transformWorkdayDataInDomain(workdayCurrentData: WorkDayData): void {
-
     const workdayIntance: WorkDay = WorkDay.toDomain(workdayCurrentData)
-    console.log("accounts in worlday cosntructor")
-    console.log(workdayCurrentData?.accountsInDay)
     this.workdayCurrent = workdayIntance
-
   }
 
 
@@ -120,17 +108,13 @@ export class Manager {
     
 
     if (workDayInLocalStorage.size == 0) {
-      //console.log("work day não existe")
       const workdayTemp: Map<string, WorkDayData> = new Map()
 
       workdayTemp.set(date, newWorkday.toJson())
       this.saveWorkdayInLocalStorage(workdayTemp)
-      //console.log(localStorage.getItem('workdays'))
       return
     }
 
-    //console.log("manager / saveWorkDATA: state work in runtime")
-    //console.log(newWorkday.toJson())
     workDayInLocalStorage.set(date, newWorkday.toJson())
 
     this.saveWorkdayInLocalStorage(workDayInLocalStorage)

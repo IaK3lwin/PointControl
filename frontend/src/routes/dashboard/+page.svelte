@@ -94,9 +94,9 @@
   </button>
 </FrameContainer>
 
-<h2>Dashboard</h2>
 
 <section class="container">
+  <h2>Dashboard</h2>
   <div>
     <hr />
     <h2>filtrar por</h2>
