@@ -76,6 +76,7 @@ header#navOptions {
   background-color: var(--background-secundary);
   padding: 2rem;
   padding: 0 .5rem;
+  align-self: flex-end;
 }
 
 nav {

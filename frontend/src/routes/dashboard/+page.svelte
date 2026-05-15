@@ -3,12 +3,9 @@
   import { Cent } from "$lib/domain/cents";
   import { Manager } from "$lib/domain/manager";
   import { PaymentManager } from "$lib/domain/PaymentManager";
-  import { WorkDay } from "$lib/domain/workDay";
   import { WorkDayCollection } from "$lib/domain/WorkDayCollection";
-  import { workDayFactory } from "$lib/domain/workDay";
   import { writable, type Writable } from "svelte/store";
-  import { workDayTodayWritable } from "$lib/stores/workday.svelte";
-  import { EarIcon, LucideMenu } from "@lucide/svelte";
+  import { LucideMenu } from "@lucide/svelte";
   import { returnWorkdayPaitTrue } from "./scripts/returnWorkdayPaitTrue";
   import FrameContainer from "$lib/components/FrameContainer.svelte";
   import WorkdayPaid from "$lib/components/WorkdayPaid.svelte";
@@ -35,7 +32,7 @@
     paymentManager.getStatisticsNeedToBePai()[1].toReal(),
   );
 
-  let frameContainerSendPayment: FrameContainer | null = $state(null)
+  let frameContainerSendPayment: FrameContainer | null = $state(null);
 
   function updateWorkdayCollection(workdayCollectionUpdate: WorkDayCollection) {
     workdaysCollectionReactive.set(workdayCollectionUpdate);
@@ -74,84 +71,93 @@
     }
   }
 
-  let valueSetPayment: string | null = $state(null) 
+  let valueSetPayment: string | null = $state(null);
   function setPayment() {
-    if (!valueSetPayment) return 
+    if (!valueSetPayment) return;
 
-    console.log("este é o valor: ", valueSetPayment)
-    const newWage: Cent = new Cent(Cent.convertValueToCent(valueSetPayment))
-    const workdayCollectionPaymentUpdated = paymentManager.setPayment(newWage)
-    updateWorkdayCollection(workdayCollectionPaymentUpdated)
+    console.log("este é o valor: ", valueSetPayment);
+    const newWage: Cent = new Cent(Cent.convertValueToCent(valueSetPayment));
+    const workdayCollectionPaymentUpdated = paymentManager.setPayment(newWage);
+    updateWorkdayCollection(workdayCollectionPaymentUpdated);
   }
 </script>
 
-
 <FrameContainer bind:this={frameContainerSendPayment}>
   <h2>Valor a ser pago</h2>
-  <input type="text" placeholder="10,00" inputmode="numeric" bind:value={valueSetPayment}>
-  <button onclick={setPayment}>
-    Efetuar cadastro
-  </button>
+  <input
+    type="text"
+    placeholder="10,00"
+    inputmode="numeric"
+    bind:value={valueSetPayment}
+  />
+  <button onclick={setPayment}> Efetuar cadastro </button>
 </FrameContainer>
 
-
 <section class="container">
-  <h2>Dashboard</h2>
-  <div>
-    <hr />
-    <h2>filtrar por</h2>
-    <section class="containerFilter">
-      <button
-        class:buttonFilterSelected={modeFilter === "pait"}
-        onclick={changeFilter.bind(null, "pait")}
-      >
-        Pagos
-      </button>
-      <button
-        class:buttonFilterSelected={modeFilter === "notPait"}
-        onclick={changeFilter.bind(null, "notPait")}
-      >
-        Não pagos
-      </button>
-      <button
-        class:buttonFilterSelected={modeFilter == "all"}
-        onclick={changeFilter.bind(null, "all")}
-      >
-        Todos
-      </button>
+  <!-- primeira parte de cima-->
+  <section>
+    <h2>Dashboard</h2>
+    <div>
+      <hr />
+      <h2>filtrar por</h2>
+      <section class="containerFilter">
+        <button
+          class:buttonFilterSelected={modeFilter === "pait"}
+          onclick={changeFilter.bind(null, "pait")}
+        >
+          Pagos
+        </button>
+        <button
+          class:buttonFilterSelected={modeFilter === "notPait"}
+          onclick={changeFilter.bind(null, "notPait")}
+        >
+          Não pagos
+        </button>
+        <button
+          class:buttonFilterSelected={modeFilter == "all"}
+          onclick={changeFilter.bind(null, "all")}
+        >
+          Todos
+        </button>
+      </section>
+      <hr />
+    </div>
+
+    <!-- segunga parte que ocupara metade da grid-->
+    <section>
+      <section class="wrapper">
+        {#if $workdaysCollectionReactive}
+          {#each $workdaysCollectionReactive as workday}
+            <WorkdayPaid {workday} />
+          {/each}
+        {/if}
+      </section>
     </section>
-
-    <hr />
-
-    <section class="wrapper">
-      {#if $workdaysCollectionReactive}
-        {#each $workdaysCollectionReactive as workday}
-          <WorkdayPaid {workday} />
-        {/each}
-      {/if}
+    <!-- Ultima parte que ocupara 1fr da tela -->
+    <section>
+      <header id="navOptions">
+        <nav>
+          <button onclick={frameContainerSendPayment.showComponent}>
+            <img
+              src="/icons/payment-method.png"
+              alt="imagem do botão de fazer pagamento"
+            />
+            <p>Cadastrar pagamento</p>
+          </button>
+          <p id="nuberStatistics">
+            <strong id="amountToPay">
+              {amountToPay}
+            </strong>
+            /
+            <strong id="dailyPayment">
+              {dailyPayment}
+            </strong>
+          </p>
+          <button>
+            <LucideMenu />
+          </button>
+        </nav>
+      </header>
     </section>
-  </div>
-
-  <header id="navOptions">
-    <nav>
-      <button onclick={frameContainerSendPayment.showComponent}>
-        <img src="/icons/payment-method.png" alt="imagem do botão de fazer pagamento">
-        <p>Cadastrar pagamento</p>
-      </button>
-
-      <p id="nuberStatistics">
-        <strong id="amountToPay">
-          {amountToPay}
-        </strong>
-        /
-        <strong id="dailyPayment">
-          {dailyPayment}
-        </strong>
-      </p>
-
-      <button>
-        <LucideMenu />
-      </button>
-    </nav>
-  </header>
+  </section>
 </section>

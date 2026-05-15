@@ -134,7 +134,7 @@
     padding: 0 0.5rem 0 0.5rem;
 
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 
