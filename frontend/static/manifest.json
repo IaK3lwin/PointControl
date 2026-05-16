@@ -1,0 +1,16 @@
+{
+  "name" : "PointControl",
+  "short_name" : "PControl",
+  "color_theme" :  "#5B7E3C",
+  "start_url" : "/",
+  "display" : "standalone",
+  "description" : "Um aplicativo para me ajudar no trabalho e gerenciamento das diárias.",
+  "icons" : [
+    {
+      "src" : "/icons/logo.png",
+      "sizes" : "190x190",
+      "type" : "image/png"
+    }
+  ]
+  
+}
