@@ -1,85 +1,97 @@
-/// <reference types="@sveltejs/kit" />
+// Disables access to DOM typings like `HTMLElement` which are not available
+// inside a service worker and instantiates the correct globals
+/// <reference no-default-lib="true"/>
+/// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
+// Ensures that the `$service-worker` import has proper type definitions
+/// <reference types="@sveltejs/kit" />
 
-declare let self: ServiceWorkerGlobalScope
+// Only necessary if you have an import from `$env/static/public`
+/// <reference types="../.svelte-kit/ambient.d.ts" />
 
-import { build, files, version } from '$service-worker'
+import { build, files, version } from '$service-worker';
 
-const CACHE = `cache-${version}`
+// This gives `self` the correct types
+const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
+
+// Create a unique cache name for this deployment
+const CACHE = `cache-${version}`;
+
 
 const ASSETS = [
-  ...build,
-  ...files
-]
+  ...build, // the app itself
+	...files  // everything in `static`
+];
+console.log("ASSETS: ", ASSETS)
+console.log("build: ", ...build)
+self.addEventListener('install', (event) => {
+	// Create a new cache and add all files to it
+	async function addFilesToCache() {
+		const cache = await caches.open(CACHE);
+		await cache.addAll(ASSETS);
+	}
 
-//install
+	event.waitUntil(addFilesToCache());
+});
 
-self.addEventListener('install', (ev) => {
-  async function addFilesToCache() {
-    console.log("loading cache")
-    const instanceCache = await caches.open(CACHE)
-    await instanceCache.addAll(ASSETS)
-  }
+self.addEventListener('activate', (event) => {
+	// Remove previous cached data from disk
+	async function deleteOldCaches() {
+		for (const key of await caches.keys()) {
+			if (key !== CACHE) await caches.delete(key);
+		}
+	}
 
-  ev.waitUntil(addFilesToCache())
-})
+	event.waitUntil(deleteOldCaches());
+});
 
-// active service worker
-self.addEventListener('activate', (ev) => {
-  async function deleteOldCache() {
-    for (const key of await caches.keys()) {
-      if (key !== CACHE) {
-        await caches.delete(key)
-      }
-    }
-  }
+self.addEventListener('fetch', (event) => {
+	// ignore POST requests etc
+	if (event.request.method !== 'GET') return;
 
-  ev.waitUntil(deleteOldCache())
-})
+	async function respond() {
+		const url = new URL(event.request.url);
+		const cache = await caches.open(CACHE);
 
-//fetch service worker
-self.addEventListener('fetch', (ev) => {
-  if (ev.request.method !== 'GET') return
+		// `build`/`files` can always be served from the cache
+		if (ASSETS.includes(url.pathname)) {
+			const response = await cache.match(url.pathname);
 
-  async function response() {
-    const url = new URL(ev.request.url)
+			if (response) {
+				return response;
+			}
+		}
 
-    const cacheInstance = await caches.open(CACHE)
+		// for everything else, try the network first, but
+		// fall back to the cache if we're offline
+		try {
+			const response = await fetch(event.request);
 
-    if (ASSETS.includes(url.pathname)) {
-      const cacheResponse = await cacheInstance.match(url.pathname)
+			// if we're offline, fetch can return a value that is not a Response
+			// instead of throwing - and we can't pass this non-Response to respondWith
+			if (!(response instanceof Response)) {
+				throw new Error('invalid response from fetch');
+			}
 
-      if (cacheResponse) {
-        return cacheResponse
-      }
-    }
+			if (response.status === 200 && !response.headers.get('cache-control')?.includes('no-store')) {
+				cache.put(event.request, response.clone());
+			}
 
-    // try first network
-    try {
-      const response = await fetch(ev.request.url)
-      const IsNotExtension = url.protocol === 'http:'
-      const IsSuccces = response.status == 200
+			return response;
+		} catch (err) {
+			const response = await cache.match(event.request);
 
-      if (IsNotExtension && IsSuccces) {
-        cacheInstance.put(ev.request, response.clone())
-      }
+			if (response) {
+				return response;
+			}
 
-      return response
-  
-    } catch{
-      // call back cache response
-      const cacheResponse = await cacheInstance.match(url.pathname)
-      if (cacheResponse) {
-        console.log("achou o cache")
-        return cacheResponse
-      }
+			// if there's no cache, then just error out
+			// as there is nothing we can do to respond to this request
+			//return new Response("notFounf", {status: 404})
+      throw err
+		}
+	}
 
-      return new Response("Not found", {status: 404})
-  
-    }
-
-  }
-
-  ev.respondWith(response())
-})
+	event.respondWith(respond());
+});
