@@ -1,4 +1,5 @@
 <script lang="ts">
+
   import "$lib/global.css"
   import { Manager } from "$lib/domain/manager"
   import { WorkDay } from "$lib/domain/workDay"
@@ -134,17 +135,16 @@
     padding: 0 0.5rem 0 0.5rem;
 
     display: flex;
-    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-
     overflow: hidden;
+
   }
 
   #accountWrapper {
     min-width: 100%;
     height: 100%;
-    overflow: scroll;
+    overflow-x: scroll;
 
     display: flex;
     gap: 1rem;
