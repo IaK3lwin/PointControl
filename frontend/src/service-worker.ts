@@ -18,9 +18,8 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
 
-
 const ASSETS = [
-  ...build, // the app itself
+	...build, // the app itself
 	...files  // everything in `static`
 ];
 
@@ -56,6 +55,7 @@ self.addEventListener('fetch', (event) => {
 		// `build`/`files` can always be served from the cache
 		if (ASSETS.includes(url.pathname)) {
 			const response = await cache.match(url.pathname);
+			console.log("response; ", response)
 
 			if (response) {
 				return response;
@@ -87,10 +87,16 @@ self.addEventListener('fetch', (event) => {
 
 			// if there's no cache, then just error out
 			// as there is nothing we can do to respond to this request
-			//return new Response("notFounf", {status: 404})
-      throw err
+			throw err;
 		}
 	}
 
 	event.respondWith(respond());
 });
+
+//received messages
+self.addEventListener('message', ev => {
+	if (ev.data && ev.data.type === 'SKIP_WAITING') {
+		self.skipWaiting()
+	}
+})

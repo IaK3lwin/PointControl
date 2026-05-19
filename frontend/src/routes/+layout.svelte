@@ -4,7 +4,24 @@
 	import "$lib/global.css"
 
 	let { children } = $props();
-	
+
+	async function detectUpdateSW() {
+		const registration = await navigator.serviceWorker.ready
+
+		registration.addEventListener('updatefound', () => {
+			const newSW = registration.installing
+
+			newSW?.addEventListener('statechange', () => {
+				if (newSW.state === 'installed') {
+					if (confirm('new updated available. relaod to update?')) {
+						newSW.postMessage({type : 'SKIP_WAITING'})
+						console.log("b")
+					}
+
+				}
+			})
+		})
+	}
 	
 </script>
 
