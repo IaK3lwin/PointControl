@@ -94,12 +94,15 @@
 </FrameContainer>
 
 <section class="container">
-  <!-- primeira parte de cima-->
-  <section>
+  <!-- HEADER -->
+  <section class="top">
     <h2>Dashboard</h2>
+
     <div>
       <hr />
+
       <h2>filtrar por</h2>
+
       <section class="containerFilter">
         <button
           class:buttonFilterSelected={modeFilter === "pait"}
@@ -107,12 +110,14 @@
         >
           Pagos
         </button>
+
         <button
           class:buttonFilterSelected={modeFilter === "notPait"}
           onclick={changeFilter.bind(null, "notPait")}
         >
           Não pagos
         </button>
+
         <button
           class:buttonFilterSelected={modeFilter == "all"}
           onclick={changeFilter.bind(null, "all")}
@@ -120,45 +125,49 @@
           Todos
         </button>
       </section>
+
       <hr />
     </div>
-
-    <!-- segunga parte que ocupara metade da grid-->
-    <section id="containerWrapper">
-      <section class="wrapper">
-        {#if $workdaysCollectionReactive}
-          {#each $workdaysCollectionReactive as workday}
-            <WorkdayPaid {workday} />
-          {/each}
-        {/if}
-      </section>
-    </section>
-
-    <!-- Ultima parte que ocupara 1fr da tela -->
-    <section>
-      <header id="navOptions">
-        <nav>
-          <button onclick={frameContainerSendPayment.showComponent}>
-            <img
-              src="/icons/payment-method.png"
-              alt="imagem do botão de fazer pagamento"
-            />
-            <p>Cadastrar pagamento</p>
-          </button>
-          <p id="nuberStatistics">
-            <strong id="amountToPay">
-              {amountToPay}
-            </strong>
-            /
-            <strong id="dailyPayment">
-              {dailyPayment}
-            </strong>
-          </p>
-          <button>
-            <LucideMenu />
-          </button>
-        </nav>
-      </header>
-    </section>
   </section>
+
+  <!-- CONTEÚDO -->
+  <main id="containerWrapper">
+    <section class="wrapper">
+      {#if $workdaysCollectionReactive}
+        {#each $workdaysCollectionReactive as workday}
+          <WorkdayPaid {workday} />
+        {/each}
+      {/if}
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <header id="navOptions">
+    <nav>
+      <button onclick={frameContainerSendPayment.showComponent}>
+        <img
+          src="/icons/payment-method.png"
+          alt="imagem do botão de fazer pagamento"
+        />
+
+        <p>Cadastrar pagamento</p>
+      </button>
+
+      <p id="nuberStatistics">
+        <strong id="amountToPay">
+          {amountToPay}
+        </strong>
+
+        /
+
+        <strong id="dailyPayment">
+          {dailyPayment}
+        </strong>
+      </p>
+
+      <button>
+        <LucideMenu />
+      </button>
+    </nav>
+  </header>
 </section>
