@@ -124,7 +124,7 @@
     </div>
 
     <!-- segunga parte que ocupara metade da grid-->
-    <section>
+    <section id="containerWrapper">
       <section class="wrapper">
         {#if $workdaysCollectionReactive}
           {#each $workdaysCollectionReactive as workday}
@@ -133,6 +133,7 @@
         {/if}
       </section>
     </section>
+
     <!-- Ultima parte que ocupara 1fr da tela -->
     <section>
       <header id="navOptions">
